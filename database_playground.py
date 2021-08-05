@@ -1,12 +1,11 @@
 import sqlite3
-from typing import List
 
 
 def scrub(name):
     return ''.join(ch for ch in name if ch.isalnum())
 
 
-class Helper():
+class Helper:
     def __init__(self, db_path='database.db'):
         self.db_path = db_path
         self.db = sqlite3.connect(db_path)
@@ -14,7 +13,7 @@ class Helper():
 
     def insert_into_table(self, table_name: str, values: tuple):
         query = f'insert into {scrub(table_name)}'
-        self.cur.execute(f'''{query} values (?, ? , ?, ?, ?, ?)''', values)
+        self.cur.execute(f'''{query} values {tuple(values)}''')
         self.db.commit()
 
     def update_value_in_table(self, table_name: str, lookup_col, lookup_value, intended_col, new_value):
@@ -53,17 +52,25 @@ class Helper():
 class EthernetHelper(Helper):
     def __init__(self):
         super(EthernetHelper, self).__init__('ethernet.db')
+        self.create_tables()
 
     def create_tables(self):
         try:
-            self.cur.execute("DROP TABLE IF EXISTS SA")
-            self.cur.execute('''CREATE TABLE SA (speed text, dc_memory_value integer,memory_per_bbu integer, memory_per_ru integer, 
-             memory_for_streaming integer, memory_per_configure integer)''')
+            self.create_sa_table()
             # self.cur.execute('''CREATE TABLE MPG ()''')
             # self.cur.execute('''CREATE TABLE vFlex ()''')
             self.db.commit()
         except:
             print('one or more tables already exists')
+
+    def create_sa_table(self):
+        self.cur.execute("DROP TABLE IF EXISTS SA")
+        self.cur.execute('''CREATE TABLE SA (speed text, dc_memory_value integer,tolerance integer)''')
+
+
+    def create_mpg_table(self):
+        self.cur.execute("DROP TABLE IF EXISTS MPG")
+        self.cur.execute('''CREATE TABLE MPG (speed text, dc_memory_value integer,tolerance integer)''')
 
     def drop_table(self, table_name):
         query = f'DROP TABLE IF EXISTS {scrub(table_name)}'
@@ -74,14 +81,18 @@ class EthernetHelper(Helper):
 class EthgHelper(Helper):
     def __init__(self):
         super(EthgHelper, self).__init__('ethg.db')
+        self.create_tables()
 
     def create_tables(self):
-        self.cur.execute("DROP TABLE IF EXISTS SA")
-        self.cur.execute('''CREATE TABLE SA (id integer distinct increment, dc_memory_value integer,memory_per_bbu integer, memory_per_ru integer, 
-         memory_for_streaming integer, memory_per_configure integer)''')
+        self.create_sa_table()
         # self.cur.execute('''CREATE TABLE MPG ()''')
         # self.cur.execute('''CREATE TABLE vFlex ()''')
         self.db.commit()
+
+    def create_sa_table(self):
+        self.cur.execute("DROP TABLE IF EXISTS SA")
+        self.cur.execute('''CREATE TABLE SA (id integer distinct increment, dc_memory_value integer,memory_per_bbu integer, memory_per_ru integer, 
+         memory_for_streaming integer, memory_per_configure integer)''')
 
     def drop_table(self, table_name):
         query = f'DROP TABLE IF EXISTS {scrub(table_name)}'
@@ -102,7 +113,7 @@ if __name__ == "__main__":
     #     print(row)
     # con.close()
     helper = EthernetHelper()
-    helper.create_tables()
+    # helper.create_tables()
     # helper.cur.execute('''insert into SA values ('CGMII',1,2,3,4,5)''')
     # helper.cur.execute('''insert into SA values ('XGMII',1,2,23,421,15)''')
     # helper.cur.execute('''insert into SA values ('CGMII',12,20,300,40,23)''')
