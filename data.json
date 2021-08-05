@@ -1,0 +1,34 @@
+{
+  "objects_list": [
+    {
+      "designtype": {
+        "type": "1"
+      },
+      "designid": {
+        "id": "0x11"
+      },
+      "macs": {
+        "macs_list": [
+          "mac1",
+          "mac2",
+          "mac3"
+        ]
+      }
+    },
+    {
+      "designtype": {
+        "type": "2"
+      },
+      "designid": {
+        "id": "0x22"
+      },
+      "macs": {
+        "macs_list": [
+          "mac1",
+          "mac2",
+          "mac3"
+        ]
+      }
+    }
+  ]
+}
