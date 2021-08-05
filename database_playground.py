@@ -66,12 +66,9 @@ class EthernetHelper(Helper):
             print('one or more tables already exists')
 
     def drop_table(self, table_name):
-        try:
-            query = f'DROP TABLE IF EXISTS {scrub(table_name)}'
-            self.cur.execute(f'''{query}''')
-            self.db.commit()
-        except:
-            print('one or more tables already exists')
+        query = f'DROP TABLE IF EXISTS {scrub(table_name)}'
+        self.cur.execute(f'''{query}''')
+        self.db.commit()
 
 
 class EthgHelper(Helper):
@@ -84,6 +81,11 @@ class EthgHelper(Helper):
          memory_for_streaming integer, memory_per_configure integer)''')
         # self.cur.execute('''CREATE TABLE MPG ()''')
         # self.cur.execute('''CREATE TABLE vFlex ()''')
+        self.db.commit()
+
+    def drop_table(self, table_name):
+        query = f'DROP TABLE IF EXISTS {scrub(table_name)}'
+        self.cur.execute(f'''{query}''')
         self.db.commit()
 
 
