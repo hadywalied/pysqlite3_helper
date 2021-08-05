@@ -4,7 +4,7 @@ from helper import Helper, scrub
 class EthernetHelper(Helper):
     def __init__(self):
         super(EthernetHelper, self).__init__('ethernet.db')
-        self.create_tables()
+        # self.create_tables()
 
     def create_tables(self):
         try:
@@ -17,11 +17,11 @@ class EthernetHelper(Helper):
 
     def create_sa_table(self):
         self.cur.execute("DROP TABLE IF EXISTS SA")
-        self.cur.execute('''CREATE TABLE SA (speed text, dc_memory_value integer,tolerance integer)''')
+        self.cur.execute('''CREATE TABLE SA (speed text unique, dc_memory_value integer,tolerance integer)''')
 
     def create_mpg_table(self):
         self.cur.execute("DROP TABLE IF EXISTS MPG")
-        self.cur.execute('''CREATE TABLE MPG (speed text, dc_memory_value integer,tolerance integer)''')
+        self.cur.execute('''CREATE TABLE MPG (speed text unique, dc_memory_value integer,tolerance integer)''')
 
     def drop_table(self, table_name):
         query = f'DROP TABLE IF EXISTS {scrub(table_name)}'
@@ -32,7 +32,7 @@ class EthernetHelper(Helper):
 class EthgHelper(Helper):
     def __init__(self):
         super(EthgHelper, self).__init__('ethg.db')
-        self.create_tables()
+        # self.create_tables()
 
     def create_tables(self):
         self.create_sa_table()
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     #     print(row)
     # con.close()
     helper = EthernetHelper()
-    # helper.create_tables()
+    helper.create_tables()
     # helper.cur.execute('''insert into SA values ('CGMII',1,2,3,4,5)''')
     # helper.cur.execute('''insert into SA values ('XGMII',1,2,23,421,15)''')
     # helper.cur.execute('''insert into SA values ('CGMII',12,20,300,40,23)''')
