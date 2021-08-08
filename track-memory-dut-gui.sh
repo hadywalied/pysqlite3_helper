@@ -45,8 +45,16 @@ else
 fi
 
 usageDetectionScript=$1
-ethg_usage_command="$usageDetectionScript $PY_VER  | grep $USER| grep $DOMAIN_ID"
-echo "$ethg_usage_command"
+
+if [[ $TECH_VER == 0 ]]; then
+	ethg_usage_command="$usageDetectionScript $PY_VER  | grep $USER| grep $DOMAIN_ID"
+	echo "$ethg_usage_command"	
+else
+	ethg_usage_command="$usageDetectionScript  | grep $USER| grep $DOMAIN_ID"
+	echo "$ethg_usage_command"
+fi
+
+
 
 InstancesNo=0
 #Wait for both GUI and DUT to be launched
