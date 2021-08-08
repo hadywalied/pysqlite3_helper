@@ -58,7 +58,6 @@ class PerformanceTracker:
         self.expected_data = self.db_helper.get_elements_subject_to_col(self.instances_dict['table_name'],
                                                                         self.instances_dict['type'],
                                                                         self.instances_dict['speed'])
-        self.usage_detiction_path = usage_detiction_path
         self.logging_path = logging_path
         self.py_ver = python_version
         self.initialize_consumption()
@@ -66,16 +65,32 @@ class PerformanceTracker:
     def initialize_consumption(self,
                                vvedusage_path='/project/med/Ethernet/EngineeringBuilds/VirtualEthernet_v11.3.1_b4126/userware/utilities/vvedusage.sh'):
 
-        vvedusage_process = subprocess.run(["bash", vvedusage_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                           universal_newlines=True)
-
-
-        tracker_process = subprocess.run(
-            ["bash", "track-memory-dut-gui.sh", self.usage_detiction_path, self.logging_path, self.py_ver, self.app],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True
-        )
+        # vvedusage_process = subprocess.run(["bash", vvedusage_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        #                                    universal_newlines=True)
+        try:
+            tracker_process = subprocess.run(
+                ["bash", "track-memory-dut-gui.sh", vvedusage_path, self.logging_path, self.py_ver, self.app],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True
+            )
+        except subprocess.CalledProcessError as e:
+            print(e.output)
 
     def validate_consumption(self):
+        expected = self.calculate_expected_consumption()
+        actual = self.calculate_actual_consumption()
+        tolerance_ratio = 1.1
+        if (actual > tolerance_ratio * expected):
+            self.report_excessive_consumption()
+        else:
+            pass
+
+    def calculate_expected_consumption(self):
+        pass
+
+    def calculate_actual_consumption(self):
+        pass
+
+    def report_excessive_consumption(self):
         pass
 
     def main(self):
