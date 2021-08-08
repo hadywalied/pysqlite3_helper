@@ -11,6 +11,7 @@ from os import listdir
 from os.path import isfile, join
 import subprocess
 
+
 # sys.path.insert(1, environ['STAMP_REG_PATH'] + '/Common/python/')
 
 
@@ -40,23 +41,39 @@ class PerformanceTracker:
                         and sum all of them to get total expected consumption *
     '''
 
-    def __init__(self, application_name: str, instances_dict: dict):
+    def __init__(self, application_name: str, instances_dict: dict, usage_detiction_path, logging_path: str,
+                 python_version: str):
         if application_name == 'ethg':
             self.db_helper = EthgHelper()
+            self.app = 0  # 0 --> 5G
         elif application_name == 'eth':
             self.db_helper = EthernetHelper()
+            self.app = 0  # 1 --> thernet
         else:
             print('There is a problem with the application_name, it can only be eth or ethg, eth is the default')
             self.db_helper = EthernetHelper()
+            self.app = 0  # 1 --> thernet
 
         self.instances_dict = instances_dict  # keep track of the DUT instance
         self.expected_data = self.db_helper.get_elements_subject_to_col(self.instances_dict['table_name'],
                                                                         self.instances_dict['type'],
                                                                         self.instances_dict['speed'])
+        self.usage_detiction_path = usage_detiction_path
+        self.logging_path = logging_path
+        self.py_ver = python_version
         self.initialize_consumption()
 
-    def initialize_consumption(self, vvedusage_path = '/project/med/Ethernet/EngineeringBuilds/VirtualEthernet_v11.3.1_b4126/userware/utilities/vvedusage.sh'):
-        pass
+    def initialize_consumption(self,
+                               vvedusage_path='/project/med/Ethernet/EngineeringBuilds/VirtualEthernet_v11.3.1_b4126/userware/utilities/vvedusage.sh'):
+
+        vvedusage_process = subprocess.run(["bash", vvedusage_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                           universal_newlines=True)
+
+
+        tracker_process = subprocess.run(
+            ["bash", "track-memory-dut-gui.sh", self.usage_detiction_path, self.logging_path, self.py_ver, self.app],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True
+        )
 
     def validate_consumption(self):
         pass
@@ -70,4 +87,4 @@ if __name__ == "__main__":
     # files = get_files_in_directory('.')
     # file = [file for file in files if 'memory_' in file]
     # print(get_lines_in_file(file[0]))
-    print('starting')
+    print('working on it')
