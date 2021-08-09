@@ -5,43 +5,11 @@ from database_playground import EthernetHelper, EthgHelper
 # except:
 #     import builtins as __builtin__
 
-import sys
-from os import environ
-from os import listdir
-from os.path import isfile, join
 import subprocess
-import shlex
-import math
-
+import json
 
 # sys.path.insert(1, environ['STAMP_REG_PATH'] + '/Common/python/')
-
-
-def run_command(command):
-    process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-    while True:
-        output = process.stdout.readline().decode()
-        if output == '' and process.poll() is not None:
-            break
-        if output:
-            if output.__contains__('EPGM'):
-                print(output.strip())
-            elif output.__contains__('error'):
-                rc = -1
-                return rc
-    rc = process.poll()
-    return rc
-
-
-def get_files_in_directory(directory: str):
-    onlyfiles = [f for f in listdir(f'{directory}') if isfile(join(f'{directory}', f))]
-    return onlyfiles
-
-
-def get_lines_in_file(file):
-    file1 = open(f'{file}', 'r')
-    Lines = file1.readlines()
-    return [line for line in Lines]
+from utils import run_command, get_files_in_directory, get_lines_in_file
 
 
 class PerformanceTracker:
@@ -71,15 +39,16 @@ class PerformanceTracker:
             }
             instances_dict = {
             "table_name" : e.g. SA
-            "type" :  e.g. speeds
-            "value" : e.g. CGMII
+            "PK" :  e.g. speeds
+            "value" : e.g. CGMII,
+            "is_streaming":e.g. True
             "macs_numbers_id" :  [] #ports
             }
 
             logging_path = './logs'
             python_version : (2 for python2, 3 for python3)
         '''
-
+        application_name = application_name.lower()
         if application_name == 'ethg':
             self.db_helper = EthgHelper()
             self.app = 0  # 0 --> 5G
@@ -95,9 +64,13 @@ class PerformanceTracker:
             self.usage_path = '/project/med/Ethernet/EngineeringBuilds/VirtualEthernet_v11.3.1_b4126/userware/utilities/vvedusage.sh'
 
         self.instances_dict = instances_dict  # keep track of the DUT instance
-        self.expected_data = self.db_helper.get_elements_subject_to_col(self.instances_dict['table_name'],
-                                                                        self.instances_dict['type'],
-                                                                        self.instances_dict['speed'])
+
+        table_name = self.instances_dict['DUT'].upper()
+        primary_key = self.instances_dict['key']
+        value = self.instances_dict['value']
+        self.expected_data = self.db_helper.get_elements_subject_to_col(table_name,
+                                                                        primary_key,
+                                                                        value)
         self.logging_path = logging_path
         self.py_ver = python_version
         self.processes = self.initialize_consumption()
@@ -121,7 +94,7 @@ class PerformanceTracker:
         return processes
 
     def handle_command_output(self, rc):
-        processes = {-1: tuple(0, 0)}
+        processes = {-1: tuple([0, 0])}
         if rc != -1:
             log_files_list = get_files_in_directory(self.logging_path)
             memory_files = [file for file in log_files_list if 'memory_' in file]
@@ -147,7 +120,7 @@ class PerformanceTracker:
 
     def validate_consumption(self, processes):
         for process in [v for k, v in processes.items()]:
-            if (process[0] == -1 or process[0] == 0):
+            if process[0] == -1 or process[0] == 0:
                 continue
             initial_consumption = process[0]
             expected = self.calculate_expected_consumption() + initial_consumption
@@ -179,11 +152,13 @@ if __name__ == "__main__":
     # file = [file for file in files if 'memory_' in file]
     # print(get_lines_in_file(file[0]))
     # print('working on it')
-    instances_ex = {
+    '''instances_ex = {
         "SA": ["CGMII", "CGMII"],
         "MPG": {1: ["CGMII", 12, 13],
                 2: [21, 22, 23]},
         "veFlex": {1: {1: [15, 16], 2: [17, 18]}}
-    }
-    instances = {"SA":}
-    tracker = PerformanceTracker('eth', )
+    }'''
+    json_text = open('input_configuration.json', 'r')
+    instances = json.load(json_text)
+    # instances = {'table_name': 'SA', 'PK': 'speed', 'value': 'CGMII', 'is_streaming': True}
+    tracker = PerformanceTracker(instances["application"], instances, logging_path='.', python_version=3)

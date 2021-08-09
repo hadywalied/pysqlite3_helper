@@ -1,0 +1,12 @@
+{
+  "application": "Eth",
+  "DUT": "SA",
+  "key": "speed",
+  "value": "CGMII",
+  "is_streaming": true,
+  "counts": {
+    "ports_count": 12,
+    "rus_count": 0,
+    "bbu_count": 0
+  }
+}

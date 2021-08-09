@@ -18,5 +18,5 @@ class data :
 if __name__ == '__main__':
     json_text = open('data.json','r')
     y = json.load(json_text)
-    print(y)
+    print(y["objects_list"][0]["designid"])
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
