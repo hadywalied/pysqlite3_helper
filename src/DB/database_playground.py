@@ -1,4 +1,4 @@
-from helper import Helper, scrub
+from src.DB.helper import Helper, scrub
 
 
 class EthernetHelper(Helper):

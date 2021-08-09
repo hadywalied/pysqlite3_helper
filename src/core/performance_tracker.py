@@ -1,4 +1,4 @@
-from database_playground import EthernetHelper, EthgHelper
+from src.DB.database_playground import EthernetHelper, EthgHelper
 
 # try:
 #     import __builtin__
@@ -9,6 +9,7 @@ import subprocess
 import json
 
 # sys.path.insert(1, environ['STAMP_REG_PATH'] + '/Common/python/')
+from src.core.handlers.handlers import Handler
 from utils import run_command, get_files_in_directory, get_lines_in_file
 
 
@@ -27,9 +28,7 @@ class PerformanceTracker:
                         and sum all of them to get total expected consumption *
     '''
 
-    def __init__(self, application_name: str, instances_dict: dict, logging_path: str,
-                 python_version: str):
-
+    def __init__(self, instance):
         '''define instances_dict as follows :
             instances_dict = {
                 "SA": ["CGMII", "CGMII"],
@@ -48,7 +47,10 @@ class PerformanceTracker:
             logging_path = './logs'
             python_version : (2 for python2, 3 for python3)
         '''
-        application_name = application_name.lower()
+        application_name = instance["application"].lower()
+        self.logging_path = instance["logging_dir"]
+        self.py_ver = instance["python_version"]
+
         if application_name == 'ethg':
             self.db_helper = EthgHelper()
             self.app = 0  # 0 --> 5G
@@ -63,27 +65,29 @@ class PerformanceTracker:
             self.app = 0  # 1 --> ethernet
             self.usage_path = '/project/med/Ethernet/EngineeringBuilds/VirtualEthernet_v11.3.1_b4126/userware/utilities/vvedusage.sh'
 
-        self.instances_dict = instances_dict  # keep track of the DUT instance
+        self.instances_list = instance['instances']  # keep track of the DUT instance
 
-        table_name = self.instances_dict['DUT'].upper()
-        primary_key = self.instances_dict['key']
-        value = self.instances_dict['value']
-        self.expected_data = self.db_helper.get_elements_subject_to_col(table_name,
-                                                                        primary_key,
-                                                                        value)
-        self.logging_path = logging_path
-        self.py_ver = python_version
-        self.processes = self.initialize_consumption()
+        # table_name = self.instances_dict['DUT'].upper()
+        # primary_key = self.instances_dict['key']
+        # value = self.instances_dict['value']
 
-    def initialize_consumption(self):
+        # self.expected_data = self.db_helper.get_elements_subject_to_col(table_name, primary_key, value)
 
+        db_handler = Handler(instances_list=self.instances_list, db=self.db_helper)
+        self.expected_data = db_handler.calculate_consumption()
+
+        tracker_path_ = instance["tracker_path"]
+
+        self.processes = self.initialize_consumption(tracker_path_)
+
+    def initialize_consumption(self, tracker_path):
         # vvedusage_process = subprocess.run(["bash", vvedusage_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         #                                    universal_newlines=True)
         # first line is the initial consumption
         rc = 1
         try:
             rc = run_command(
-                f'bash track-memory-dut-gui.sh {self.usage_path} {self.logging_path} {self.py_ver} {self.app}')
+                f'bash {tracker_path} {self.usage_path} {self.logging_path} {self.py_ver} {self.app}')
             # tracker_process = subprocess.run(
             #     ["bash", "track-memory-dut-gui.sh", self.usage_path, self.logging_path, self.py_ver, self.app],
             #     stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True
@@ -158,7 +162,7 @@ if __name__ == "__main__":
                 2: [21, 22, 23]},
         "veFlex": {1: {1: [15, 16], 2: [17, 18]}}
     }'''
-    json_text = open('input_configuration.json', 'r')
-    instances = json.load(json_text)
+    json_text = open('../input_configuration.json', 'r')
+    instance = json.load(json_text)
     # instances = {'table_name': 'SA', 'PK': 'speed', 'value': 'CGMII', 'is_streaming': True}
-    tracker = PerformanceTracker(instances["application"], instances, logging_path='.', python_version=3)
+    tracker = PerformanceTracker(instance)

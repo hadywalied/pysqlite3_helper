@@ -1,0 +1,14 @@
+{
+  "application": "Eth",
+  "instances": [
+    {
+      "DUT": "SA",
+      "key": "speed",
+      "value": "CGMII",
+      "is_streaming": true
+    }
+  ],
+  "python_version": 3,
+  "tracker_path": "./track-memory-dut-gui.sh",
+  "logging_dir": "./log"
+}
