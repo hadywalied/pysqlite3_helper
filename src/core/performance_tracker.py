@@ -73,61 +73,57 @@ class PerformanceTracker:
 
         # self.expected_data = self.db_helper.get_elements_subject_to_col(table_name, primary_key, value)
 
-        db_handler = Handler(instances_list=self.instances_list, db=self.db_helper)
-        self.expected_data = db_handler.calculate_consumption()
+        self.db_handler = Handler(instances_list=self.instances_list, db=self.db_helper)
+        self.expected_data = self.db_handler.calculate_consumption()
 
         tracker_path_ = instance["tracker_path"]
 
-        self.processes = self.initialize_consumption(tracker_path_)
+        self.processes = {-1: tuple([0, 0])}
+        self.initialize_consumption(tracker_path_)
 
     def initialize_consumption(self, tracker_path):
-        # vvedusage_process = subprocess.run(["bash", vvedusage_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-        #                                    universal_newlines=True)
         # first line is the initial consumption
-        rc = 1
+        self.problem_flag = False
         try:
-            rc = run_command(
-                f'bash {tracker_path} {self.usage_path} {self.logging_path} {self.py_ver} {self.app}')
-            # tracker_process = subprocess.run(
-            #     ["bash", "track-memory-dut-gui.sh", self.usage_path, self.logging_path, self.py_ver, self.app],
-            #     stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True
-            # )
+            for output in run_command(
+                    f'bash {tracker_path} {self.usage_path} {self.logging_path} {self.py_ver} {self.app}'):
+                if output.__contains__('EPGM'):
+                    print(output.strip())
+                elif output.__contains__('error'):
+                    print(f'something went wrong: {output}')
+                    self.problem_flag = True
         except subprocess.CalledProcessError as e:
             print(e.output)
-        processes = self.handle_command_output(rc)
-        return processes
 
-    def handle_command_output(self, rc):
-        processes = {-1: tuple([0, 0])}
-        if rc != -1:
-            log_files_list = get_files_in_directory(self.logging_path)
-            memory_files = [file for file in log_files_list if 'memory_' in file]
+    def handle_command_output(self):
+        if self.problem_flag:
+            self.processes[-1] = tuple([-1, -1])
+            return
+        # if rc != -1:
+        log_files_list = get_files_in_directory(self.logging_path)
+        memory_files = [file for file in log_files_list if 'memory_' in file]
+        for file in memory_files:
+            lines = get_lines_in_file(file)
+            process_id = lines[0].split(' ')[-1]
+            memories = []
             for file in memory_files:
                 lines = get_lines_in_file(file)
-                process_id = lines[0].split(' ')[-1]
-                memories = []
-                for file in memory_files:
-                    lines = get_lines_in_file(file)
-                    process_id = int(lines[0].split(' ')[-1])
-                    for i in lines[1:]:
-                        x = i.split(' ')
-                        memories.append(int(x[-2]))
-                processes[process_id] = tuple([memories[0], max(memories)])
-        elif rc == -1:
-            processes[-1] = tuple([-1, -1])
-            print("something wrong has happened")
-        else:
-            pass
-        return processes
-
-    # self.initial_consumption =
+                process_id = int(lines[0].split(' ')[-1])
+                for i in lines[1:]:
+                    x = i.split(' ')
+                    memories.append(int(x[-2]))
+            self.processes[process_id] = tuple([memories[0], max(memories)])
 
     def validate_consumption(self, processes):
-        for process in [v for k, v in processes.items()]:
-            if process[0] == -1 or process[0] == 0:
+        for i, process in enumerate([v for k, v in processes.items()]):
+            if process[0] == -1:
+                print("error")
+                break
+            elif process[0] == 0:
                 continue
             initial_consumption = process[0]
-            expected = self.calculate_expected_consumption() + initial_consumption
+            consumptions = self.db_handler.calculate_consumption()
+            expected = consumptions[i] + initial_consumption
             actual = process[1]
             tolerance_ratio = self.get_tolerance() + 1
             if (actual > tolerance_ratio * expected):
@@ -136,17 +132,12 @@ class PerformanceTracker:
                 pass
 
     def get_tolerance(self):
-        return int(self.expected_data['tolerance'])
-
-    def calculate_expected_consumption(self):
-        return self.expected_data['dc_memory_value'] + (
-            self.expected_data['streaming_value'] if self.instances_dict['is_streaming'] == True else
-            self.expected_data['memory_per_port'])
+        return int(self.db_handler.get_tolerance())
 
     def report_excessive_consumption(self):
         pass
 
-    def main(self):
+    def main(self):u
         self.validate_consumption(self.processes)
 
 

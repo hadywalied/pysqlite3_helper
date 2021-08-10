@@ -13,15 +13,18 @@ class Handler:
         self.db = db
 
     def calculate_consumption(self):
-        consumption = []
+        self.consumptions = []
         adapters = {
-            'sa': DutAdapter(SAHandler(self.db), calculate_consumption='return_expected_consumption'),
-            'mpg': DutAdapter(MPGHandler(self.db), calculate_consumption='return_expected_consumption')
+            'sa': DutAdapter(SAHandler(self.db), calculate_consumption='return_expected_consumption',
+                             get_tolerance='get_tolerance'),
+            'mpg': DutAdapter(MPGHandler(self.db), calculate_consumption='return_expected_consumption',
+                              get_tolerance="get_tolerance")
         }
         for instance in self.instances_list:
-            consumption.append(adapters[instance['DUT'].lower()].calculate_consumption())
-
-        return consumption
+            adapter = adapters[instance['DUT'].lower()].pk_value = instance['value']
+            self.consumptions.append(adapter.calculate_consumption())
+            # yield adapter.calculate_consumption()
+        return self.consumptions
 
 
 class DutAdapter:
