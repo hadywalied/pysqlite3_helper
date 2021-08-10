@@ -125,14 +125,14 @@ class PerformanceTracker:
             consumptions = self.db_handler.calculate_consumption()
             expected = consumptions[i] + initial_consumption
             actual = process[1]
-            tolerance_ratio = self.get_tolerance() + 1
+            tolerance_ratio = self.get_tolerance()[i] + 1
             if (actual > tolerance_ratio * expected):
                 self.report_excessive_consumption()
             else:
                 pass
 
     def get_tolerance(self):
-        return int(self.db_handler.get_tolerance())
+        return list(self.db_handler.get_tolerance())
 
     def report_excessive_consumption(self):
         pass
