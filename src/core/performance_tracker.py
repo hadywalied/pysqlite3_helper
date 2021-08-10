@@ -137,7 +137,7 @@ class PerformanceTracker:
     def report_excessive_consumption(self):
         pass
 
-    def main(self):u
+    def main(self):
         self.validate_consumption(self.processes)
 
 
