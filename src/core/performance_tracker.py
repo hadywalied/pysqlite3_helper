@@ -1,4 +1,5 @@
-from src.Database.database_helpers import EthernetHelper, EthgHelper
+from src.Database.setup.FiveG.FiveG_helper import FiveGHelper
+from src.Database.setup.Ethernet.ethrenet_helper import EthernetHelper
 
 # try:
 #     import __builtin__
@@ -35,7 +36,7 @@ class PerformanceTracker:
         self.py_ver = instance["python_version"]
 
         if application_name == '5g':
-            self.db_helper = EthgHelper()
+            self.db_helper = FiveGHelper()
             self.app = 0  # 0 --> 5G
             self.usage_path = ''
         elif application_name == 'ethernet':
@@ -104,14 +105,15 @@ class PerformanceTracker:
             elif process[1][0] == 0:
                 continue
             initial_consumption = process[1][0]
-            total_accumulated_consumptions = self.db_handler.calculate_consumption(process[0])
-            expected_memory_consumption = total_accumulated_consumptions[i] + initial_consumption
-            actual_memory_consumtion = process[1][1]
-            tolerance_ratio = self.get_tolerance()[i] + 1
-            if actual_memory_consumtion > tolerance_ratio * expected_memory_consumption:
-                self.report_excessive_consumption()
-            else:
-                self.report_regular_consumption()
+            total_accumulated_consumptions = self.db_handler.calculate_consumption(key=process[0])
+            for j, total_accumulated_consumption in enumerate(total_accumulated_consumptions):
+                expected_memory_consumption = total_accumulated_consumption[i] + initial_consumption
+                actual_memory_consumtion = process[1][1]
+                tolerance_ratio = self.get_tolerance()[j][i] + 1
+                if actual_memory_consumtion > tolerance_ratio * expected_memory_consumption:
+                    self.report_excessive_consumption()
+                else:
+                    self.report_regular_consumption()
 
     def get_tolerance(self):
         return list(self.db_handler.get_tolerance())

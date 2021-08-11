@@ -32,7 +32,7 @@ class Handler:
     def calculate_expected_epgm_consumption(self):
         for instance in self.instances_list:
             adapter = self.adapters[instance['DUT'].lower()]
-            adapter.pk_value = instance['value']
+            adapter.pk_values = instance['value']
             self.consumptions.append(adapter.calculate_consumption())
             # yield adapter.calculate_consumption()
 
