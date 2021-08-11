@@ -1,11 +1,15 @@
+from os import environ
+
 from src.Database.setup.FiveG.FiveG_helper import FiveGHelper
 from src.Database.setup.Ethernet.ethrenet_helper import EthernetHelper
 
 import subprocess
 import sys
-# sys.path.insert(1, environ['STAMP_REG_PATH'] + '/Common/python/')
+
 from src.core.handlers.handlers import Handler
 from utils import run_command, get_files_in_directory, get_lines_in_file
+
+sys.path.insert(1, environ['STAMP_REG_PATH'] + '/Common/python/')
 
 
 class PerformanceTracker:
@@ -90,7 +94,9 @@ class PerformanceTracker:
                 for i in lines[1:]:
                     x = i.split(' ')
                     memories.append(int(x[-2]))
-                self.processes['{process_name}_{process_id}'.format(process_name = process_name, process_id = process_id)] = tuple([memories[0], max(memories)])
+                self.processes[
+                    '{process_name}_{process_id}'.format(process_name=process_name, process_id=process_id)] = tuple(
+                    [memories[0], max(memories)])
 
     def validate_consumption(self, processes):
         for i, process in enumerate(processes.items()):
