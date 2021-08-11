@@ -92,7 +92,7 @@ class PerformanceTracker:
                 for i in lines[1:]:
                     x = i.split(' ')
                     memories.append(int(x[-2]))
-                self.processes[f'{process_name}_{process_id}'] = tuple([memories[0], max(memories)])
+                self.processes['{process_name}_{process_id}'.format(process_name = process_name, process_id = process_id)] = tuple([memories[0], max(memories)])
 
     def validate_consumption(self, processes):
         for i, process in enumerate(processes.items()):
