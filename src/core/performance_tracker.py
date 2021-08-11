@@ -100,11 +100,11 @@ class PerformanceTracker:
         for i, process in enumerate(processes.items()):
             initial_consumption = process[1][0]
             expected_memory_consumption = 0
-            expected_memory_consumption, j = self.calculate_expected_value(expected_memory_consumption, i,
-                                                                           initial_consumption, process)
-            actual_memory_consumtion = process[1][1]
+            expected_memory_consumption = self.calculate_expected_value(expected_memory_consumption, i,
+                                                                        initial_consumption, process)
+            actual_memory_consumption = process[1][1]
             tolerance_ratio = self.get_tolerance() + 1
-            if actual_memory_consumtion > tolerance_ratio * expected_memory_consumption:
+            if actual_memory_consumption > tolerance_ratio * expected_memory_consumption:
                 self.report_excessive_consumption()
             else:
                 self.report_regular_consumption()
@@ -114,7 +114,7 @@ class PerformanceTracker:
         for j, total_accumulated_consumption in enumerate(total_accumulated_consumptions):
             expected_memory_consumption = expected_memory_consumption + sum(total_accumulated_consumption[i])
         expected_memory_consumption = expected_memory_consumption + initial_consumption
-        return expected_memory_consumption, j
+        return expected_memory_consumption
 
     def get_tolerance(self):
         tolerance = []
