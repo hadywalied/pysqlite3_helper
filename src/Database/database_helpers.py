@@ -1,4 +1,4 @@
-from src.DB.helper import Helper, scrub
+from src.Database.helper import Helper, scrub
 
 
 class EthernetHelper(Helper):
@@ -7,7 +7,7 @@ class EthernetHelper(Helper):
 
     def __init__(self):
         '''create a database file for the ethernet tables in ethernet.db '''
-        super(EthernetHelper, self).__init__('ethernet.db')
+        super(EthernetHelper, self).__init__('./Ethernet/ethernet.db')
         # self.create_tables()
 
     def create_tables(self):
@@ -41,7 +41,7 @@ class EthgHelper(Helper):
 
     def __init__(self):
         '''create a database file for the ethernet tables in ethg.db '''
-        super(EthgHelper, self).__init__('ethg.db')
+        super(EthgHelper, self).__init__('./FiveG/ethg.db')
         # self.create_tables()
 
     def create_tables(self):

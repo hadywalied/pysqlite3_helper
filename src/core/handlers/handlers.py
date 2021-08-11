@@ -2,8 +2,6 @@ from src.core.handlers.MPG_handler import MPGHandler
 from src.core.handlers.SA_handler import SAHandler
 
 
-# from builtins import getattr
-
 class Handler:
     instances_list = []
 
@@ -18,13 +16,25 @@ class Handler:
                               get_tolerance="get_tolerance")
         }
 
-    def calculate_consumption(self):
+    def calculate_consumption(self, key):
         self.consumptions = []
+        if key.__contains__('EPGM'):
+            # move logic inside the specific_handler
+            self.calculate_expected_epgm_consumption()
+        elif key.__contains__('controller'):
+            pass
+        else:
+            # DUT
+            pass
+
+        return self.consumptions
+
+    def calculate_expected_epgm_consumption(self):
         for instance in self.instances_list:
-            adapter = self.adapters[instance['DUT'].lower()].pk_value = instance['value']
+            adapter = self.adapters[instance['DUT'].lower()]
+            adapter.pk_value = instance['value']
             self.consumptions.append(adapter.calculate_consumption())
             # yield adapter.calculate_consumption()
-        return self.consumptions
 
     def get_tolerance(self):
         self.tolerances = []
@@ -33,7 +43,6 @@ class Handler:
             self.tolerances.append(adapter.get_tolerance())
             # yield adapter.calculate_consumption()
         return self.tolerances
-
 
 
 class DutAdapter:

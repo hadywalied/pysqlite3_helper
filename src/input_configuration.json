@@ -1,10 +1,16 @@
 {
-  "application": "Eth",
+  "application": "Ethernet",
   "instances": [
     {
       "DUT": "SA",
       "key": "speed",
       "value": "CGMII",
+      "is_streaming": true
+    },
+    {
+      "DUT": "SA",
+      "key": "speed",
+      "value": "XGMII",
       "is_streaming": true
     }
   ],
