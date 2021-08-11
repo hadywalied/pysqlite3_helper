@@ -7,7 +7,7 @@ class EthernetHelper(Helper):
 
     def __init__(self):
         '''create a database file for the ethernet tables in ethernet.db '''
-        super(EthernetHelper, self).__init__('../Database/Ethernet/ethernet.db')
+        super(EthernetHelper, self).__init__('src/Database/Ethernet/ethernet.db')
         # self.create_tables()
 
     def create_tables(self):

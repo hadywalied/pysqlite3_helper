@@ -7,7 +7,7 @@ class FiveGHelper(Helper):
 
     def __init__(self):
         '''create a database file for the ethernet tables in ethg.db '''
-        super(FiveGHelper, self).__init__('../Database/FiveG/FiveG.db')
+        super(FiveGHelper, self).__init__('src/Database/FiveG/FiveG.db')
         # self.create_tables()
 
     def create_tables(self):
