@@ -5,7 +5,7 @@ def scrub(name):
     return ''.join(ch for ch in name if ch.isalnum())
 
 
-class Helper:
+class Helper(object):
     '''
     this is the sqlite3 database helper class, it contains helper functions to apply
     the CRUD (Create - Read - Update - Delete) operations to the database tables.
