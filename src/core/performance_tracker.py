@@ -42,7 +42,7 @@ class PerformanceTracker:
             self.app = 1  # 1 --> ethernet
             self.usage_path = '/project/med/Ethernet/EngineeringBuilds/VirtualEthernet_v11.3.1_b4126/userware/utilities/vvedusage.sh'
         else:
-            print('There is a problem with the application_name, it can only be eth or ethg, eth is the default')
+            print('There is a problem with the application_name, it can only be ethernet or 5g, eth is the default')
             self.db_helper = EthernetHelper()
             self.app = 0  # 1 --> ethernet
             self.usage_path = '/project/med/Ethernet/EngineeringBuilds/VirtualEthernet_v11.3.1_b4126/userware/utilities/vvedusage.sh'
