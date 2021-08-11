@@ -50,7 +50,7 @@ class PerformanceTracker:
         self.instances_list = instance['instances']  # keep track of the DUT instance
 
         self.db_handler = Handler(instances_list=self.instances_list, db=self.db_helper)
-        self.expected_data = self.db_handler.calculate_consumption()
+        # self.expected_data = self.db_handler.calculate_consumption()
 
         tracker_path_ = instance["tracker_path"]
 
