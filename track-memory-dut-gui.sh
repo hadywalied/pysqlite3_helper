@@ -92,4 +92,5 @@ fi
 cd $tstLoggingDirectory || return
 #$(printenv TST_CASE_LOGGING_DIRECTORY)
 
-$STAMP_REG_PATH/Ethernet/SW/Shell/regression-launch/is-alive.sh ${pids[*]}& 
+#$STAMP_REG_PATH/Ethernet/SW/Shell/regression-launch/is-alive.sh ${pids[*]}& 
+/home/hwalied/Project/pysqlite3_helper/is-alive.sh ${pids[*]}& 
