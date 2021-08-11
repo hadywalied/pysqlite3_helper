@@ -1,7 +1,6 @@
 from src.Database.setup.FiveG.FiveG_helper import FiveGHelper
 from src.Database.setup.Ethernet.ethrenet_helper import EthernetHelper
 
-
 import subprocess
 import sys
 # sys.path.insert(1, environ['STAMP_REG_PATH'] + '/Common/python/')
@@ -56,10 +55,12 @@ class PerformanceTracker:
 
     def initialize_consumption(self, tracker_path):
         try:
-            command = f"bash {tracker_path} {self.usage_path} {self.logging_path} {self.py_ver} {self.app}"
+            command = "bash {tracker_path} {usage_path} {logging_path} {py_ver} {app}".format(
+                tracker_path=tracker_path, usage_path=self.usage_path, logging_path=self.logging_path,
+                py_ver=self.py_ver, app=self.app)
             for output in run_command(command):
                 if output.__contains__('error'):
-                    print(f'something went wrong: {output}')
+                    print('something went wrong: {output}'.format(output=output))
                     self.problem_flag = True
                     sys.exit()
                 print(output.strip())

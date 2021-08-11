@@ -22,11 +22,11 @@ def run_command(command):
 
 
 def get_files_in_directory(directory: str):
-    onlyfiles = [f for f in listdir(f'{directory}') if isfile(join(f'{directory}', f))]
+    onlyfiles = [f for f in listdir(directory) if isfile(join(directory, f))]
     return onlyfiles
 
 
 def get_lines_in_file(file):
-    file1 = open(f'{file}', 'r')
+    file1 = open(file, 'r')
     Lines = file1.readlines()
     return [line for line in Lines]
