@@ -7,7 +7,7 @@ import subprocess
 import sys
 
 from src.core.handlers.handlers import Handler
-from utils import run_command, get_files_in_directory, get_lines_in_file
+from src.core.utils import run_command, get_files_in_directory, get_lines_in_file
 
 sys.path.insert(1, environ['STAMP_REG_PATH'] + '/Common/python/')
 
