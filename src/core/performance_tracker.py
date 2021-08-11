@@ -56,8 +56,8 @@ class PerformanceTracker:
 
     def initialize_consumption(self, tracker_path):
         try:
-            for output in run_command(
-                    f'bash {tracker_path} {self.usage_path} {self.logging_path} {self.py_ver} {self.app}'):
+            command = f"bash {tracker_path} {self.usage_path} {self.logging_path} {self.py_ver} {self.app}"
+            for output in run_command(command):
                 if output.__contains__('error'):
                     print(f'something went wrong: {output}')
                     self.problem_flag = True
