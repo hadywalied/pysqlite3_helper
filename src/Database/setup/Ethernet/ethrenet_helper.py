@@ -31,5 +31,5 @@ class EthernetHelper(Helper):
     def drop_table(self, table_name):
         '''to remove a table in the db'''
         query = f'DROP TABLE IF EXISTS {scrub(table_name)}'
-        self.cur.execute(f'''{query}''')
+        self.cur.execute(query)
         self.db.commit()
