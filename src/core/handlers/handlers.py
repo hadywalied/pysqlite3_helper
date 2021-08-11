@@ -13,8 +13,8 @@ class Handler:
         self.adapters = {
             'sa': DutAdapter(SAHandler(self.db), calculate_consumption='return_expected_consumption',
                              get_tolerance='get_tolerance'),
-            'mpg': DutAdapter(MPGHandler(self.db), calculate_consumption='return_expected_consumption',
-                              get_tolerance="get_tolerance")
+            # 'mpg': DutAdapter(MPGHandler(self.db), calculate_consumption='return_expected_consumption',
+            #                   get_tolerance="get_tolerance")
         }
 
     def calculate_consumption(self, key):
