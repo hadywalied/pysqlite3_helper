@@ -8,7 +8,7 @@ import json
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    json_text = open('src/data.json', 'r')
+    json_text = open('input_configuration.json', 'r')
     y = json.load(json_text)
-    print(y["objects_list"][0]["designid"])
+    print(y)
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

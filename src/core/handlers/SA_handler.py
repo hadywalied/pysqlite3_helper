@@ -14,8 +14,8 @@ class SAHandler:
 
     def return_expected_consumption(self):
         consumption = len(self.exact_values) * [0]
-        for exact_value in self.exact_values:
-            for i, value in enumerate(exact_value.items()):
+        for i, exact_value in enumerate(self.exact_values):
+            for value in exact_value.items():
                 if value[0] != 'speed' and value[0] != 'tolerance':
                     consumption[i] = consumption[i] + value[1]
         return consumption

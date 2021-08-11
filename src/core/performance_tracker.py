@@ -56,7 +56,7 @@ class PerformanceTracker:
 
         tracker_path_ = instance["tracker_path"]
 
-        self.processes = {'-1': tuple([0, 0])}
+        self.processes = {}
         self.initialize_consumption(tracker_path_)
 
     def initialize_consumption(self, tracker_path):
@@ -67,7 +67,6 @@ class PerformanceTracker:
                     print(f'something went wrong: {output}')
                     self.problem_flag = True
                     sys.exit()
-                    break
                 print(output.strip())
         except subprocess.CalledProcessError as e:
             print(e.output)
@@ -99,21 +98,23 @@ class PerformanceTracker:
 
     def validate_consumption(self, processes):
         for i, process in enumerate(processes.items()):
-            if process[1][0] == -1:
-                print("error")
-                break
-            elif process[1][0] == 0:
-                continue
             initial_consumption = process[1][0]
-            total_accumulated_consumptions = self.db_handler.calculate_consumption(key=process[0])
-            for j, total_accumulated_consumption in enumerate(total_accumulated_consumptions):
-                expected_memory_consumption = total_accumulated_consumption[i] + initial_consumption
-                actual_memory_consumtion = process[1][1]
-                tolerance_ratio = self.get_tolerance()[j][i] + 1
-                if actual_memory_consumtion > tolerance_ratio * expected_memory_consumption:
-                    self.report_excessive_consumption()
-                else:
-                    self.report_regular_consumption()
+            expected_memory_consumption = 0
+            expected_memory_consumption, j = self.calculate_expected_value(expected_memory_consumption, i,
+                                                                           initial_consumption, process)
+            actual_memory_consumtion = process[1][1]
+            tolerance_ratio = self.get_tolerance()[j][i] + 1  # TODO you need to unsqueeze it to a single dimension and then get the max value
+            if actual_memory_consumtion > tolerance_ratio * expected_memory_consumption:
+                self.report_excessive_consumption()
+            else:
+                self.report_regular_consumption()
+
+    def calculate_expected_value(self, expected_memory_consumption, i, initial_consumption, process):
+        total_accumulated_consumptions = self.db_handler.calculate_consumption(key=process[0])
+        for j, total_accumulated_consumption in enumerate(total_accumulated_consumptions):
+            expected_memory_consumption = expected_memory_consumption + sum(total_accumulated_consumption[i])
+        expected_memory_consumption = expected_memory_consumption + initial_consumption
+        return expected_memory_consumption, j
 
     def get_tolerance(self):
         return list(self.db_handler.get_tolerance())
