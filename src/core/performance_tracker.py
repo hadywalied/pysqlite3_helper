@@ -1,13 +1,8 @@
 from src.Database.setup.FiveG.FiveG_helper import FiveGHelper
 from src.Database.setup.Ethernet.ethrenet_helper import EthernetHelper
 
-# try:
-#     import __builtin__
-# except:
-#     import builtins as __builtin__
 
 import subprocess
-import json
 import sys
 # sys.path.insert(1, environ['STAMP_REG_PATH'] + '/Common/python/')
 from src.core.handlers.handlers import Handler
@@ -130,20 +125,4 @@ class PerformanceTracker:
 
 
 if __name__ == "__main__":
-    # print(get_files_in_directory('.'))
-    # files = get_files_in_directory('.')
-    # file = [file for file in files if 'memory_' in file]
-    # print(get_lines_in_file(file[0]))
-    # print('working on it')
-    '''instances_ex = {
-        "SA": ["CGMII", "CGMII"],
-        "MPG": {1: ["CGMII", 12, 13],
-                2: [21, 22, 23]},
-        "veFlex": {1: {1: [15, 16], 2: [17, 18]}}
-    }'''
-    json_text = open('../input_configuration.json', 'r')
-    instance = json.load(json_text)
-    print(instance)
-    sys.exit()
-    # instances = {'table_name': 'SA', 'PK': 'speed', 'value': 'CGMII', 'is_streaming': True}
-    tracker = PerformanceTracker(instance)
+    pass
