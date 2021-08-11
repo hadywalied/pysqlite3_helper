@@ -29,24 +29,7 @@ class PerformanceTracker:
     '''
 
     def __init__(self, instance):
-        '''define instances_dict as follows :
-            instances_dict = {
-                "SA": ["CGMII", "CGMII"],
-	            "MPG":{1:["CGMII, 12, 13],
-			           2:[21, 22, 23]},
-	            "veFlex":{1:{1:[15, 16],2:[17,18]}}
-            }
-            instances_dict = {
-            "table_name" : e.g. SA
-            "PK" :  e.g. speeds
-            "value" : e.g. CGMII,
-            "is_streaming":e.g. True
-            "macs_numbers_id" :  [] #ports
-            }
 
-            logging_path = './logs'
-            python_version : (2 for python2, 3 for python3)
-        '''
         application_name = instance["application"].lower()
         self.logging_path = instance["logging_dir"]
         self.py_ver = instance["python_version"]
@@ -67,12 +50,6 @@ class PerformanceTracker:
 
         self.instances_list = instance['instances']  # keep track of the DUT instance
 
-        # table_name = self.instances_dict['DUT'].upper()
-        # primary_key = self.instances_dict['key']
-        # value = self.instances_dict['value']
-
-        # self.expected_data = self.db_helper.get_elements_subject_to_col(table_name, primary_key, value)
-
         self.db_handler = Handler(instances_list=self.instances_list, db=self.db_helper)
         self.expected_data = self.db_handler.calculate_consumption()
 
@@ -82,19 +59,18 @@ class PerformanceTracker:
         self.initialize_consumption(tracker_path_)
 
     def initialize_consumption(self, tracker_path):
-        # first line is the initial consumption
-        self.problem_flag = False
         try:
             for output in run_command(
                     f'bash {tracker_path} {self.usage_path} {self.logging_path} {self.py_ver} {self.app}'):
                 if output.__contains__('error'):
                     print(f'something went wrong: {output}')
                     self.problem_flag = True
+                    sys.exit()
                     break
                 print(output.strip())
         except subprocess.CalledProcessError as e:
             print(e.output)
-            self.problem_flag = True
+            sys.exit()
 
     def main(self):
         if not self.problem_flag:
@@ -102,10 +78,6 @@ class PerformanceTracker:
             self.validate_consumption(self.processes)
 
     def analyze_log_files(self):
-        if self.problem_flag:
-            self.processes['-1'] = tuple([-1, -1])
-            return
-
         log_files_list = get_files_in_directory(self.logging_path)
         self.analyze_memory_files(log_files_list)
 
