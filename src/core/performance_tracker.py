@@ -103,7 +103,7 @@ class PerformanceTracker:
             expected_memory_consumption, j = self.calculate_expected_value(expected_memory_consumption, i,
                                                                            initial_consumption, process)
             actual_memory_consumtion = process[1][1]
-            tolerance_ratio = self.get_tolerance()[j][i] + 1  # TODO you need to unsqueeze it to a single dimension and then get the max value
+            tolerance_ratio = self.get_tolerance() + 1
             if actual_memory_consumtion > tolerance_ratio * expected_memory_consumption:
                 self.report_excessive_consumption()
             else:
@@ -117,7 +117,10 @@ class PerformanceTracker:
         return expected_memory_consumption, j
 
     def get_tolerance(self):
-        return list(self.db_handler.get_tolerance())
+        tolerance = []
+        for t in self.db_handler.get_tolerance():
+            tolerance.append(max(t))
+        return max(tolerance)
 
     def report_excessive_consumption(self):
         pass
