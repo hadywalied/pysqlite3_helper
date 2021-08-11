@@ -9,7 +9,7 @@ import sys
 from src.core.handlers.handlers import Handler
 from src.core.utils import run_command, get_files_in_directory, get_lines_in_file
 
-sys.path.insert(1, environ['STAMP_REG_PATH'] + '/Common/python/')
+# sys.path.insert(1, environ['STAMP_REG_PATH'] + '/Common/python/')
 
 
 class PerformanceTracker:
