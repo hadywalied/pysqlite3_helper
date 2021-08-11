@@ -1,0 +1,64 @@
+{
+  "application": "Eth",
+  "instances": [
+    {
+      "DUT": "SA",
+      "key": "speed",
+      "value": [
+        "CGMII",
+        "XGMII-PCS",
+        "USXGMII"
+      ],
+      "is_streaming": true
+    },
+    {
+      "DUT": "MPG",
+      "key": "speed",
+      "value": {
+        "1": [
+          "XGMII-PCS",
+          "CGMII-PCS"
+        ],
+        "2": [
+          "CGMII-PCS",
+          "GMII-PCS"
+        ]
+      },
+      "is_streaming": true
+    },
+    {
+      "DUT": "VeFlex",
+      "key": "speed",
+      "value": {
+        "1": {
+          "50": [
+            "XGMII-PCS",
+            "CGMII-PCS"
+          ],
+          "200": [
+            "CGMII-PCS",
+            "GMII-PCS"
+          ]
+        },
+        "2": {
+          "200": [
+            "GMII-PCS",
+            "XGMII-PCS"
+          ],
+          "100": [
+            "XGMII-PCS",
+            "CGMII-PCS"
+          ]
+        },
+        "400": [
+          "XGMII-PCS",
+          "CGMII-PCS"
+        ]
+      },
+      "is_streaming": true
+    }
+  ],
+  "python_version": 3,
+  "tracker_path": "./track-memory-dut-gui.sh",
+  "logging_dir": "./log"
+}
