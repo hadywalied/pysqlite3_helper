@@ -2,22 +2,22 @@ import shlex
 import subprocess
 from os import listdir
 from os.path import isfile, join
+from threading import Timer
 
 
 def run_command(command):
-    try:
-        process = subprocess.check_output(shlex.split(command), stderr=subprocess.STDOUT, timeout=90)
-    except:
-        pass
+    process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    timer = Timer(90.0, process.kill)
     while True:
-        output = process.stdout.readline().decode()
-        if output == '' and process.poll() is not None:
-            break
-        elif output.__contains__('not found'):
-            print('Error, command not found \n {}'.format(output))
-            break
-        if output:
-            yield output
+        try:
+            timer.start()
+            output = process.stdout.readline().decode()
+            if output == '' and process.poll() is not None:
+                break
+            if output:
+                yield output
+        finally:
+            timer.cancel()
     #         if output.__contains__('EPGM'):
     #             print(output.strip())
     #         elif output.__contains__('error'):
