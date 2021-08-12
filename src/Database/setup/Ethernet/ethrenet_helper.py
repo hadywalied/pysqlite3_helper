@@ -6,8 +6,8 @@ class EthernetHelper(Helper):
         to create any table, simply dublicate the  create_sa_table and change the table name and fields'''
 
     def __init__(self):
-        '''create a database file for the ethernet tables in ethernet.db '''
-        super(EthernetHelper, self).__init__('src/Database/Ethernet/ethernet.db')
+        '''create a database file for the ethernet tables in eth.db '''
+        super(EthernetHelper, self).__init__('src/Database/Ethernet/eth.db')
         # self.create_tables()
 
     def create_tables(self):
