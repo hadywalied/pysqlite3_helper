@@ -64,9 +64,8 @@ class PerformanceTracker:
                 tracker_path=tracker_path, usage_path=self.usage_path, logging_path=self.logging_path,
                 py_ver=self.py_ver, app=self.app)
             for output in run_command(command):
-                if output.__contains__('error'):
+                if output.__contains__('error') or output.__contains__('not found'):
                     print('something went wrong: {output}'.format(output=output))
-                    self.problem_flag = True
                     sys.exit()
                 print(output.strip())
         except subprocess.CalledProcessError as e:
