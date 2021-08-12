@@ -66,9 +66,8 @@ class PerformanceTracker:
                 py_ver=self.py_ver, app=self.app)
 
             for output in run_command(command):
-                if output.__contains__('error'):
+                if output.__contains__('error') or output.__contains__('not found'):
                     print('something went wrong: {output}'.format(output=output))
-                    self.problem_flag = True
                     sys.exit()
                 print(output.strip())
         except subprocess.CalledProcessError as e:
@@ -81,24 +80,21 @@ class PerformanceTracker:
 
     def analyze_log_files(self):
         log_files_list = get_files_in_directory(self.logging_path)
-        self.analyze_memory_files(log_files_list)
+        self.analyze_memory_files(self.logging_path, log_files_list)
 
-    def analyze_memory_files(self, log_files_list):
+    def analyze_memory_files(self, logging_path, log_files_list):
         memory_files = [file for file in log_files_list if 'memory_' in file]
         for file in memory_files:
-            lines = get_lines_in_file(file)
+            lines = get_lines_in_file(logging_path + '/' + file)
             process_id = lines[0].split(' ')[-1]
             memories = []
-            for file in memory_files:
-                lines = get_lines_in_file(file)
-                process_id = str(lines[0].split(' ')[-1])
-                process_name = str(lines[0].split(',')[0].split(' ')[1])
-                for i in lines[1:]:
-                    x = i.split(' ')
-                    memories.append(int(x[-2]))
-                self.processes[
-                    '{process_name}_{process_id}'.format(process_name=process_name, process_id=process_id)] = tuple(
-                    [memories[0], max(memories)])
+            process_name = str(lines[0].split(',')[0].split(' ')[1])
+            for i in lines[1:]:
+                x = i.split(' ')
+                memories.append(int(x[-2]))
+            self.processes[
+                '{process_name}_{process_id}'.format(process_name=process_name, process_id=process_id)] = tuple(
+                [memories[0], max(memories)])
 
     def validate_consumption(self, processes):
         for i, process in enumerate(processes.items()):
