@@ -8,7 +8,10 @@ def run_command(command):
     process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
     while True:
         output = process.stdout.readline().decode()
-        if output == '' or process.poll() is not None:
+        if output == '' and process.poll() is not None:
+            break
+        elif output.__contains__('not found'):
+            print('Error, command not found \n {}'.format(output))
             break
         if output:
             yield output
