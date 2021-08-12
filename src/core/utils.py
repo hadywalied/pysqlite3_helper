@@ -5,8 +5,11 @@ from os.path import isfile, join
 
 
 def run_command(command):
-    process = subprocess.check_output(shlex.split(command), stderr=subprocess.STDOUT,
-                                      timeout=90, shell=True)
+    try:
+        process = subprocess.check_output(shlex.split(command), stderr=subprocess.STDOUT,
+                                          timeout=90, shell=True)
+    except:
+        pass
     while True:
         output = process.stdout.readline().decode()
         if output == '' and process.poll() is not None:
