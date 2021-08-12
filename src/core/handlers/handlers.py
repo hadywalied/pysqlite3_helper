@@ -39,7 +39,8 @@ class Handler:
     def get_tolerance(self):
         self.tolerances = []
         for instance in self.instances_list:
-            adapter = self.adapters[instance['DUT'].lower()].pk_value = instance['value']
+            adapter = self.adapters[instance['DUT'].lower()]
+            adapter.pk_value = instance['value']
             self.tolerances.append(adapter.get_tolerance())
             # yield adapter.calculate_consumption()
         return self.tolerances
