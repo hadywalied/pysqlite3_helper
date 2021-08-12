@@ -9,6 +9,7 @@ import sys
 from src.core.handlers.handlers import Handler
 from src.core.utils import run_command, get_files_in_directory, get_lines_in_file
 
+
 # sys.path.insert(1, environ['STAMP_REG_PATH'] + '/Common/python/')
 
 
@@ -75,9 +76,8 @@ class PerformanceTracker:
             sys.exit()
 
     def main(self):
-        if not self.problem_flag:
-            self.analyze_log_files()
-            self.validate_consumption(self.processes)
+        self.analyze_log_files()
+        self.validate_consumption(self.processes)
 
     def analyze_log_files(self):
         log_files_list = get_files_in_directory(self.logging_path)
