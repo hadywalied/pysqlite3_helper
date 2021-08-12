@@ -6,8 +6,7 @@ from os.path import isfile, join
 
 def run_command(command):
     try:
-        process = subprocess.check_output(shlex.split(command), stderr=subprocess.STDOUT,
-                                          timeout=90, shell=True)
+        process = subprocess.check_output(shlex.split(command), stderr=subprocess.STDOUT, timeout=90)
     except:
         pass
     while True:
