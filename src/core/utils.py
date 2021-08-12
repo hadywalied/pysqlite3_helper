@@ -5,7 +5,7 @@ from os.path import isfile, join
 
 
 def run_command(command):
-    process = subprocess.check_output(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+    process = subprocess.check_output(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                       timeout=90, shell=True)
     while True:
         output = process.stdout.readline().decode()
