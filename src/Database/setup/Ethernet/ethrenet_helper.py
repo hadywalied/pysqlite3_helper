@@ -7,7 +7,7 @@ class EthernetHelper(Helper):
 
     def __init__(self):
         '''create a database file for the ethernet tables in eth.db '''
-        super(EthernetHelper, self).__init__('C:\\Users\\himep\\PycharmProjects\\pythonProject2\\src\\Database\\Ethernet\\eth.db') #C:\\Users\\himep\\PycharmProjects\\pythonProject2\\src\\Database\\Ethernet\\eth.db
+        super(EthernetHelper, self).__init__('src/Database/Ethernet/eth.db') #C:\\Users\\himep\\PycharmProjects\\pythonProject2\\src\\Database\\Ethernet\\eth.db
         # self.create_tables()
 
     def create_tables(self):
