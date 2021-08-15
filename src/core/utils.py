@@ -3,31 +3,31 @@ import subprocess
 from os import listdir
 from os.path import isfile, join
 from threading import Timer
+import time
 
 
 def run_command(command):
     process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    timer = Timer(90.0, process.kill)
-    flag = True
+    delay = 90
+    timer = Timer(delay, process.kill)
     try:
         timer.start()
         while True:
             output = process.stdout.readline().decode()
             if output == '' and process.poll() is not None:
-                flag = False
                 break
             if output:
                 yield output
     finally:
-        if (flag):
-            timer.cancel()
-    #         if output.__contains__('EPGM'):
-    #             print(output.strip())
-    #         elif output.__contains__('error'):
-    #             rc = -1
-    #             return rc
-    # rc = process.poll()
-    # return rc
+        time.sleep(delay)
+        timer.cancel()
+#         if output.__contains__('EPGM'):
+#             print(output.strip())
+#         elif output.__contains__('error'):
+#             rc = -1
+#             return rc
+# rc = process.poll()
+# return rc
 
 
 def get_files_in_directory(directory: str):
