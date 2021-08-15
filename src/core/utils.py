@@ -12,8 +12,8 @@ def run_command(command):
         timer.start()
         while True:
             output = process.stdout.readline().decode()
-            # if output == '' and process.poll() is not None:
-            #     break
+            if output == '' and process.poll() is not None:
+                break
             if output:
                 yield output
     finally:
