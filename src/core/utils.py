@@ -8,16 +8,19 @@ from threading import Timer
 def run_command(command):
     process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     timer = Timer(90.0, process.kill)
+    flag = True
     try:
         timer.start()
         while True:
             output = process.stdout.readline().decode()
             if output == '' and process.poll() is not None:
+                flag = False
                 break
             if output:
                 yield output
     finally:
-        timer.cancel()
+        if (flag):
+            timer.cancel()
     #         if output.__contains__('EPGM'):
     #             print(output.strip())
     #         elif output.__contains__('error'):
