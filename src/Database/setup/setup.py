@@ -19,9 +19,9 @@ if __name__ == "__main__":
     # helper.cur.execute('''insert into SA values ('CGMII',12,20,300,40,23)''')
     # helper.db.commit()
     items = [
-        ('CGMII', 1, 2, 3, 4, 5),
-        ('XGMII', 1, 2, 23, 421, 15),
-        ('CGMII', 12, 20, 300, 40, 23)
+        ('CGMII', 1, 2),
+        ('XGMII', 1, 2),
+        # ('CGMII', 12, 20)
     ]
     for item in items:
         helper.insert_into_table('SA', item)
@@ -29,5 +29,5 @@ if __name__ == "__main__":
     # for row in helper.cur.execute('select * from SA'):
     #     print(row)
     print(helper.get_all_elements('SA'))
-    print(helper.get_elements_subject_to_col('SA', column='speed', value='CGMII'))
+    print(helper.get_elements_subject_to_col('SA', column='speed', value='CGMII')[0]['tolerance'])
     del helper
