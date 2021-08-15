@@ -4,6 +4,11 @@ import sqlite3
 def scrub(name):
     return ''.join(ch for ch in name if ch.isalnum())
 
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
 
 class Helper(object):
     '''
@@ -15,6 +20,7 @@ class Helper(object):
         '''initialize the database file path and connect to it'''
         self.db_path = db_path
         self.db = sqlite3.connect(db_path)
+        self.db.row_factory = dict_factory
         self.cur = self.db.cursor()
 
     def insert_into_table(self, table_name: str, values: tuple):

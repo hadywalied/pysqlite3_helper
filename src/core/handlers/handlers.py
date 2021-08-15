@@ -1,3 +1,4 @@
+from src.Database.setup.Ethernet.ethrenet_helper import EthernetHelper
 from src.core.handlers.MPG_handler import MPGHandler
 from src.core.handlers.SA_handler import SAHandler
 
@@ -72,5 +73,6 @@ class DutAdapter:
 
 
 if __name__ == "__main__":
-    adapter = DutAdapter(SAHandler(), calc='main')
-    adapter.calc()
+    adapter = DutAdapter(SAHandler(EthernetHelper()), calculate_consumption='return_expected_consumption',
+                             get_tolerance='get_tolerance')
+    print(adapter.get_tolerance())
