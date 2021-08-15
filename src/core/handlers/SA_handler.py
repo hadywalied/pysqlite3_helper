@@ -22,6 +22,6 @@ class SAHandler:
 
     def get_tolerance(self):
         tolerance = len(self.exact_values) * [0]
-        for i, exact_value in self.exact_values:
+        for i, exact_value in enumerate(self.exact_values):
             tolerance[i] = exact_value['tolerance']
         return tolerance
