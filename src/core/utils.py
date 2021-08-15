@@ -6,7 +6,7 @@ from threading import Timer
 
 
 def run_command(command):
-    process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     timer = Timer(90.0, process.kill)
     try:
         timer.start()
