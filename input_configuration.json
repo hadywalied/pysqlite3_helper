@@ -5,9 +5,7 @@
       "DUT": "SA",
       "key": "speed",
       "value": [
-        "CGMII",
-        "XGMII-PCS",
-        "USXGMII"
+        "CGMII"
       ],
       "is_streaming": false
     }
