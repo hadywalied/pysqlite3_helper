@@ -3,11 +3,9 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import json
-<<<<<<< HEAD
+
 from src.core.performance_tracker import PerformanceTracker
 
-=======
->>>>>>> 1ef1fdc414ccac249332b703bf470480166a3c93
 
 # Press the green button in the gutter to run the script.
 from src.core.performance_tracker import PerformanceTracker
