@@ -121,10 +121,10 @@ class PerformanceTracker:
         return max(tolerance)
 
     def report_excessive_consumption(self):
-        pass
+        print('exccessive usage')
 
     def report_regular_consumption(self):
-        pass
+        print('regular usage')
 
 
 if __name__ == "__main__":
