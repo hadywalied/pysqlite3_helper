@@ -41,7 +41,7 @@ class ConcreteSubject(Subject):
     changes.
     """
 
-    _state: str = None
+    _state = None
     """
     For the sake of simplicity, the Subject's state, essential to all
     subscribers, is stored in this variable.
