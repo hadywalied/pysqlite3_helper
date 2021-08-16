@@ -124,8 +124,8 @@ class PerformanceTracker:
     def calculate_expected_value(self, expected_memory_consumption, initial_consumption, process):
         pdb.set_trace()
         total_accumulated_consumptions = self.db_handler.calculate_consumption(key=process[0])
-        for total_accumulated_consumption in total_accumulated_consumptions[0]:
-            expected_memory_consumption = expected_memory_consumption + total_accumulated_consumption
+        for total_accumulated_consumption in total_accumulated_consumptions:
+            expected_memory_consumption = expected_memory_consumption + sum(total_accumulated_consumption)
         expected_memory_consumption = expected_memory_consumption + initial_consumption
         return expected_memory_consumption
 
