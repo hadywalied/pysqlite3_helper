@@ -21,5 +21,5 @@ if __name__ == '__main__':
     tracker = PerformanceTracker(y)
     while True:
         tracker.main()
-        time.sleep(90)
+        time.sleep(30)
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
