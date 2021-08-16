@@ -8,21 +8,20 @@ import time
 
 def run_command(command):
     process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    # delay = 90
-    # timer = Timer(delay, process.kill)
+    delay = 1
+    timer = Timer(delay, lambda: print('killed'))
     try:
-        # timer.start()
+        timer.start()
         while True:
             output = process.stdout.readline().decode()
             if output == '' and process.poll() is not None:
                 break
             if output:
                 yield output
-    except:
+    finally:
         pass
-    # finally:
-    #     time.sleep(delay)
-    #     timer.cancel()
+        # time.sleep(delay)
+        timer.cancel()
 
 
 #         if output.__contains__('EPGM'):
