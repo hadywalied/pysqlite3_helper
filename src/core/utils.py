@@ -9,6 +9,8 @@ import time
 
 import subprocess, threading
 
+def scrub(name):
+    return ''.join(ch for ch in name if ch.isalnum())
 
 @asyncio.coroutine
 def run_command(command):

@@ -1,8 +1,7 @@
 import sqlite3
 
+from src.core.utils import scrub
 
-def scrub(name):
-    return ''.join(ch for ch in name if ch.isalnum())
 
 def dict_factory(cursor, row):
     d = {}
