@@ -114,7 +114,7 @@ class PerformanceTracker:
         for i, process in enumerate(processes.items()):
             initial_consumption = process[1][0]
             expected_memory_consumption = 0
-            expected_memory_consumption = self.calculate_expected_value(expected_memory_consumption, i,
+            expected_memory_consumption = self.calculate_expected_value(expected_memory_consumption,
                                                                         initial_consumption, process)
             actual_memory_consumption = process[1][1]
             tolerance_ratio = self.get_tolerance() + 1
@@ -123,11 +123,11 @@ class PerformanceTracker:
             else:
                 self.report_regular_consumption()
 
-    def calculate_expected_value(self, expected_memory_consumption, i, initial_consumption, process):
+    def calculate_expected_value(self, expected_memory_consumption, initial_consumption, process):
         pdb.set_trace()
         total_accumulated_consumptions = self.db_handler.calculate_consumption(key=process[0])
-        for j, total_accumulated_consumption in enumerate(total_accumulated_consumptions[0]):
-            expected_memory_consumption = expected_memory_consumption + sum(total_accumulated_consumption[i])
+        for total_accumulated_consumption in total_accumulated_consumptions[0]:
+            expected_memory_consumption = expected_memory_consumption + sum(total_accumulated_consumption)
         expected_memory_consumption = expected_memory_consumption + initial_consumption
         return expected_memory_consumption
 
@@ -145,6 +145,7 @@ class PerformanceTracker:
 
     def __del__(self):
         self.subject.detach(self.observer_a)
+
 
 if __name__ == "__main__":
     pass
