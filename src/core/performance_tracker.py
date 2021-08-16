@@ -8,6 +8,7 @@ import subprocess
 import sys
 
 from src.core.handlers.handlers import Handler
+from src.core.observers import ConcreteSubject, ConcreteObserverA
 from src.core.utils import run_command, get_files_in_directory, get_lines_in_file
 
 
@@ -58,21 +59,15 @@ class PerformanceTracker:
 
         self.processes = {}
         # self.initialize_consumption(self.tracker_path_)
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.print_script_output())
-        loop.run_forever()
+        self.subject = ConcreteSubject()
 
-    @asyncio.coroutine
-    def print_script_output(self):
-        while True :
-            command = "bash {tracker_path} {usage_path} {logging_path} {py_ver} {app}".format(
-                tracker_path=self.tracker_path_, usage_path=self.usage_path, logging_path=self.logging_path,
-                py_ver=self.py_ver, app=self.app)
-            output = yield from run_command(command)
-            if output.__contains__('error') or output.__contains__('not found'):
-                print('something went wrong: {output}'.format(output=output))
-                sys.exit()
-            print(output.strip())
+        self.observer_a = ConcreteObserverA()
+        self.subject.attach(self.observer_a)
+
+        command = "bash {tracker_path} {usage_path} {logging_path} {py_ver} {app}".format(
+            tracker_path=self.tracker_path_, usage_path=self.usage_path, logging_path=self.logging_path,
+            py_ver=self.py_ver, app=self.app)
+        self.subject.some_business_logic(command)
 
     def initialize_consumption(self, tracker_path):
         try:
@@ -144,6 +139,8 @@ class PerformanceTracker:
     def report_regular_consumption(self):
         print('regular usage')
 
+    def __del__(self):
+        self.subject.detach(self.observer_a)
 
 if __name__ == "__main__":
     pass
