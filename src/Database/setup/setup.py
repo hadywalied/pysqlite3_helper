@@ -19,8 +19,8 @@ if __name__ == "__main__":
     # helper.cur.execute('''insert into SA values ('CGMII',12,20,300,40,23)''')
     # helper.db.commit()
     items = [
-        ('CGMII', 1, 2),
-        ('XGMII', 1, 2),
+        ('CGMII', 100, 0.1),
+        ('XGMII', 120, 0.2),
         # ('CGMII', 12, 20)
     ]
     for item in items:
