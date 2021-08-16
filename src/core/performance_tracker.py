@@ -94,7 +94,7 @@ class PerformanceTracker:
 
     def analyze_memory_files(self, logging_path, log_files_list):
         memory_files = [file for file in log_files_list if 'memory_' in file]
-        pdb.set_trace()
+        # pdb.set_trace()
         for file in memory_files:
             lines = get_lines_in_file(logging_path + '/' + file)
             process_id = scrub(lines[0].split(' ')[-1])
@@ -108,7 +108,7 @@ class PerformanceTracker:
                 [memories[0], max(memories)])
 
     def validate_consumption(self, processes):
-        pdb.set_trace()
+        # pdb.set_trace()
         for i, process in enumerate(processes.items()):
             initial_consumption = process[1][0]
             expected_memory_consumption = 0
@@ -122,7 +122,7 @@ class PerformanceTracker:
                 self.report_regular_consumption()
 
     def calculate_expected_value(self, expected_memory_consumption, initial_consumption, process):
-        pdb.set_trace()
+        # pdb.set_trace()
         total_accumulated_consumptions = self.db_handler.calculate_consumption(key=process[0])
         for total_accumulated_consumption in total_accumulated_consumptions:
             expected_memory_consumption = expected_memory_consumption + sum(total_accumulated_consumption)
