@@ -47,7 +47,7 @@ class ConcreteSubject(Subject):
     subscribers, is stored in this variable.
     """
 
-    _observers: List[Observer] = []
+    _observers = []
     """
     List of subscribers. In real life, the list of subscribers can be stored
     more comprehensively (categorized by event type, etc.).
