@@ -8,12 +8,18 @@ from src.core.performance_tracker import PerformanceTracker
 
 
 # Press the green button in the gutter to run the script.
+import time
+
 from src.core.performance_tracker import PerformanceTracker
+import pdb;
 
 if __name__ == '__main__':
+    pdb.set_trace()
     json_text = open('input_configuration.json', 'r')
     y = json.load(json_text)
     print(y)
     tracker = PerformanceTracker(y)
-    tracker.main()
+    while True:
+        tracker.main()
+        time.sleep(90)
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
