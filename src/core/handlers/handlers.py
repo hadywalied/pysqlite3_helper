@@ -19,7 +19,7 @@ class Handler:
         }
 
     def calculate_consumption(self, key):
-        if key.__contains__('EPGM'):
+        if key.__contains__('epgm'):
             # move logic inside the specific_handler
             self.calculate_expected_epgm_consumption()
         elif key.__contains__('controller'):
