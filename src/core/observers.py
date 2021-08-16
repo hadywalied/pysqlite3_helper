@@ -86,14 +86,17 @@ class ConcreteSubject(Subject):
             while True:
                 output = process.stdout.readline().decode()
                 if output == '' and process.poll() is not None:
+                    self.state = 'process terminated'
+                    self.notify()
                     break
                 if output:
                     self.state = output
-            self.notify()
+                    self.notify()
 
         thread = threading.Thread(target=target)
         thread.start()
 
+        thread.setDaemon(True)
 
 
 class Observer(ABC):
@@ -117,7 +120,8 @@ attached to.
 
 class ConcreteObserverA(Observer):
     def update(self, subject: Subject) -> None:
-        if subject.state.__contains__('error') or subject.state.__contains__('not found') or subject.state.__contains__("down"):
+        if subject.state.__contains__('error') or subject.state.__contains__('not found') or subject.state.__contains__(
+                "down"):
             print('something went wrong: {output}'.format(output=subject.state))
             sys.exit(0)
         print(subject.state)
