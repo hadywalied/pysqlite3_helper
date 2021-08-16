@@ -1,3 +1,4 @@
+import asyncio
 from os import environ
 
 from src.Database.setup.FiveG.FiveG_helper import FiveGHelper
@@ -53,10 +54,25 @@ class PerformanceTracker:
         self.db_handler = Handler(instances_list=self.instances_list, db=self.db_helper)
         # self.expected_data = self.db_handler.calculate_consumption()
 
-        tracker_path_ = instance["tracker_path"]
+        self.tracker_path_ = instance["tracker_path"]
 
         self.processes = {}
-        self.initialize_consumption(tracker_path_)
+        # self.initialize_consumption(self.tracker_path_)
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(self.print_script_output())
+        loop.run_forever()
+
+    @asyncio.coroutine
+    def print_script_output(self):
+        while True :
+            command = "bash {tracker_path} {usage_path} {logging_path} {py_ver} {app}".format(
+                tracker_path=self.tracker_path_, usage_path=self.usage_path, logging_path=self.logging_path,
+                py_ver=self.py_ver, app=self.app)
+            output = yield from run_command(command)
+            if output.__contains__('error') or output.__contains__('not found'):
+                print('something went wrong: {output}'.format(output=output))
+                sys.exit()
+            print(output.strip())
 
     def initialize_consumption(self, tracker_path):
         try:
