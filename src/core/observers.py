@@ -94,9 +94,9 @@ class ConcreteSubject(Subject):
                     self.notify()
 
         thread = threading.Thread(target=target)
+        thread.setDaemon(True)
         thread.start()
 
-        thread.setDaemon(True)
 
 
 class Observer(ABC):
