@@ -10,7 +10,7 @@ import sys
 
 from src.core.handlers.handlers import Handler
 from src.core.observers import ConcreteSubject, ConcreteObserverA
-from src.core.utils import run_command, get_files_in_directory, get_lines_in_file
+from src.core.utils import run_command, get_files_in_directory, get_lines_in_file, scrub
 
 
 # sys.path.insert(1, environ['STAMP_REG_PATH'] + '/Common/python/')
@@ -99,9 +99,9 @@ class PerformanceTracker:
         pdb.set_trace()
         for file in memory_files:
             lines = get_lines_in_file(logging_path + '/' + file)
-            process_id = lines[0].split(' ')[-1]
+            process_id = scrub(lines[0].split(' ')[-1])
             memories = []
-            process_name = str(lines[0].split(',')[0].split(' ')[1])
+            process_name = scrub(str(lines[0].split(',')[0].split(':')[1]))
             for i in lines[1:]:
                 x = i.split(' ')
                 memories.append(int(x[-2]))
