@@ -64,15 +64,14 @@ class PerformanceTracker:
 
     @asyncio.coroutine
     def print_script_output(self):
-        while True :
-            command = "bash {tracker_path} {usage_path} {logging_path} {py_ver} {app}".format(
-                tracker_path=self.tracker_path_, usage_path=self.usage_path, logging_path=self.logging_path,
-                py_ver=self.py_ver, app=self.app)
-            output = yield from run_command(command)
-            if output.__contains__('error') or output.__contains__('not found'):
-                print('something went wrong: {output}'.format(output=output))
-                sys.exit()
-            print(output.strip())
+        command = "bash {tracker_path} {usage_path} {logging_path} {py_ver} {app}".format(
+            tracker_path=self.tracker_path_, usage_path=self.usage_path, logging_path=self.logging_path,
+            py_ver=self.py_ver, app=self.app)
+        output = yield from run_command(command)
+        if output.__contains__('error') or output.__contains__('not found'):
+            print('something went wrong: {output}'.format(output=output))
+            sys.exit()
+        print(output.strip())
 
     def initialize_consumption(self, tracker_path):
         try:

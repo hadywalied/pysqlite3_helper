@@ -12,7 +12,7 @@ import subprocess, threading
 
 @asyncio.coroutine
 def run_command(command):
-    process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = asyncio.subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     while True:
         output = process.stdout.readline().decode()
         if output == '' and process.poll() is not None:
