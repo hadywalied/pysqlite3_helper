@@ -1,4 +1,4 @@
-from __future__ import annotations
+# from __future__ import annotations
 
 import shlex
 import subprocess
@@ -14,14 +14,14 @@ class Subject(ABC):
     """
 
     @abstractmethod
-    def attach(self, observer: Observer) -> None:
+    def attach(self, observer) -> None:
         """
         Attach an observer to the subject.
         """
         pass
 
     @abstractmethod
-    def detach(self, observer: Observer) -> None:
+    def detach(self, observer) -> None:
         """
         Detach an observer from the subject.
         """
@@ -53,11 +53,11 @@ class ConcreteSubject(Subject):
     more comprehensively (categorized by event type, etc.).
     """
 
-    def attach(self, observer: Observer) -> None:
+    def attach(self, observer) -> None:
         print("Subject: Attached an observer.")
         self._observers.append(observer)
 
-    def detach(self, observer: Observer) -> None:
+    def detach(self, observer) -> None:
         self._observers.remove(observer)
 
     """
