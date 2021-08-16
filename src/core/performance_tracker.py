@@ -1,5 +1,6 @@
 import asyncio
 import pdb
+import time
 from os import environ
 
 from src.Database.setup.FiveG.FiveG_helper import FiveGHelper
@@ -97,6 +98,13 @@ class PerformanceTracker:
         # pdb.set_trace()
         for file in memory_files:
             lines = get_lines_in_file(logging_path + '/' + file)
+            if(len(lines) < 2):
+                time.sleep(30)
+                lines = get_lines_in_file(logging_path + '/' + file)
+                if(len(lines)<2):
+                    print("error in log file {}".format(file))
+                    sys.exit(0)
+
             process_id = scrub(lines[0].split(' ')[-1])
             memories = []
             process_name = scrub(str(lines[0].split(',')[0].split(':')[1]))
