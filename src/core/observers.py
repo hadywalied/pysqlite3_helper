@@ -3,8 +3,8 @@
 import shlex
 import subprocess
 import sys
+import threading
 from abc import ABC, abstractmethod
-
 
 
 class Subject(ABC):
@@ -40,7 +40,7 @@ class ConcreteSubject(Subject):
     changes.
     """
 
-    _state = None
+    state = None
     """
     For the sake of simplicity, the Subject's state, essential to all
     subscribers, is stored in this variable.
@@ -79,16 +79,21 @@ class ConcreteSubject(Subject):
         triggers a notification method whenever something important is about to
         happen (or after it).
         """
-        process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE)
-        while True:
-            output = process.stdout.readline().decode()
-            if output == '' and process.poll() is not None:
-                break
-            if output:
-                self._state = output
 
-        self.notify()
+        def target():
+            process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
+            while True:
+                output = process.stdout.readline().decode()
+                if output == '' and process.poll() is not None:
+                    break
+                if output:
+                    self.state = output
+            self.notify()
+
+        thread = threading.Thread(target=target)
+        thread.start()
+
 
 
 class Observer(ABC):
@@ -112,11 +117,10 @@ attached to.
 
 class ConcreteObserverA(Observer):
     def update(self, subject: Subject) -> None:
-        if subject._state.__contains__('error') or subject._state.__contains__('error'):
-            print('something went wrong: {output}'.format(output=subject._state))
+        if subject.state.__contains__('error') or subject.state.__contains__('error'):
+            print('something went wrong: {output}'.format(output=subject.state))
             sys.exit(0)
-        print(subject._state)
-
+        print(subject.state)
 
 
 if __name__ == "__main__":
