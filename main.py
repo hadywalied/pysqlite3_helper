@@ -19,7 +19,16 @@ if __name__ == '__main__':
     y = json.load(json_text)
     print(y)
     tracker = PerformanceTracker(y)
-    while True:
-        tracker.main()
-        time.sleep(90)
+    # while True:
+    # Logic to stream
+    p1 = Packet()
+    start(phy=1, burst="Cont", packet=p1)
+    start(phy=2, burst="Cont", packet=p1)
+    time.sleep(30)
+    stop(phy=1)
+    stop(phy=2)
+
+    tracker.main()
+    # time.sleep(30)
+
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
