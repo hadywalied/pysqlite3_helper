@@ -89,7 +89,7 @@ tstLoggingDirectory=$2
 if [[ $tstLoggingDirectory = "" ]]; then
 	tstLoggingDirectory=$(pwd)
 fi
-cd $tstLoggingDirectory || return
+cd $tstLoggingDirectory 
 #$(printenv TST_CASE_LOGGING_DIRECTORY)
 
 #$STAMP_REG_PATH/Ethernet/SW/Shell/regression-launch/is-alive.sh ${pids[*]}& 
