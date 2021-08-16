@@ -96,6 +96,7 @@ class PerformanceTracker:
 
     def analyze_memory_files(self, logging_path, log_files_list):
         memory_files = [file for file in log_files_list if 'memory_' in file]
+        pdb.set_trace()
         for file in memory_files:
             lines = get_lines_in_file(logging_path + '/' + file)
             process_id = lines[0].split(' ')[-1]
