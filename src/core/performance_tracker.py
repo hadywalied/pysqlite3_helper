@@ -112,7 +112,7 @@ class PerformanceTracker:
         for i, process in enumerate(processes.items()):
             initial_consumption = process[1][0]
             expected_memory_consumption = 0
-            expected_memory_consumption = self.calculate_expected_value(expected_memory_consumption, i,
+            expected_memory_consumption = self.calculate_expected_value(expected_memory_consumption,
                                                                         initial_consumption, process)
             actual_memory_consumption = process[1][1]
             tolerance_ratio = self.get_tolerance() + 1
@@ -143,6 +143,7 @@ class PerformanceTracker:
 
     def __del__(self):
         self.subject.detach(self.observer_a)
+
 
 if __name__ == "__main__":
     pass
