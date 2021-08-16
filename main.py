@@ -8,10 +8,10 @@ import json
 import time
 
 from src.core.performance_tracker import PerformanceTracker
-import pdb;
+import pdb
 
 if __name__ == '__main__':
-    pdb.set_trace()
+    # pdb.set_trace()
     json_text = open('input_configuration.json', 'r')
     y = json.load(json_text)
     print(y)

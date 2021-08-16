@@ -1,4 +1,5 @@
 import asyncio
+import pdb
 from os import environ
 
 from src.Database.setup.FiveG.FiveG_helper import FiveGHelper
@@ -106,6 +107,7 @@ class PerformanceTracker:
                 [memories[0], max(memories)])
 
     def validate_consumption(self, processes):
+        pdb.set_trace()
         for i, process in enumerate(processes.items()):
             initial_consumption = process[1][0]
             expected_memory_consumption = 0
