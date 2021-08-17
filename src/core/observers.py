@@ -119,6 +119,7 @@ attached to.
 
 class ConcreteObserverA(Observer):
     def update(self, subject: Subject) -> None:
+        self.subject = subject
         if subject.state.__contains__('error') or subject.state.__contains__('not found') or subject.state.__contains__(
                 "down"):
             print('something went wrong: {output}'.format(output=subject.state))
@@ -126,7 +127,7 @@ class ConcreteObserverA(Observer):
         print(subject.state)
 
     def __del__(self):
-        if subject.thread.is_alive():
+        if self.subject.thread.is_alive():
             self.process.terminate()
             subject.thread.join()
 
