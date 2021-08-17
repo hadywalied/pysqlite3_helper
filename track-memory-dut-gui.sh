@@ -69,9 +69,8 @@ re='^[0-9]+$'
 pids=()
 
 python_id=$PPID
-parentpid_list=$(eval ps -o ppid=$python_id -C controller.bin)
 
-for item in $parentpid_list; do
+for item in $(eval ps -o ppid=$python_id -C controller.bin); do
   if [[ $item =~ $python_id ]]; then
     if [[ $item =~ 1 ]]; then
       if [[ $(expr length $item) -gt 1 ]]; then
