@@ -1,0 +1,1 @@
+stop * --snoop true

@@ -12,7 +12,7 @@ import time
 
 from src.core.performance_tracker import PerformanceTracker
 import pdb
-# from vepy_api import *
+from vepy_api import *
 
 if __name__ == '__main__':
     # pdb.set_trace()
@@ -22,15 +22,16 @@ if __name__ == '__main__':
     tracker = PerformanceTracker(y)
     # while True:
     # Logic to stream
-    # p1 = Packet()
-    # start(phy=1, burst="Cont", packet=p1)
-    # time.sleep(10)
-    # start(phy=2, burst="Cont", packet=p1)
-    # time.sleep(10)
-    # stop(phy=1)
-    # stop(phy=2)
-
+    r1 = RawPayload(payload_length=1500)
+    p1 = Packet(payload=r1)
+    start(phy=1, burst="Cont", packet=p1)
     time.sleep(30)
+    start(phy=2, burst="Cont", packet=p1)
+    time.sleep(30)
+    stop(phy=1, snoop = True)
+    stop(phy=2, snoop = True)
+
+    # time.sleep(30)
     tracker.main()
     # time.sleep(30)
 

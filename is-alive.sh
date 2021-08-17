@@ -159,7 +159,7 @@ GetChildren()
 
 	local cmdp='pgrep -P '$1
 	local children=$($cmdp)
-
+	local i
 	local lvl=$2
 	lvl=$((lvl+1)) # Generation Level of current process 
 	
@@ -172,15 +172,14 @@ GetChildren()
 		done
 	fi
 }
-
 for ((i=$start;i<=$end;i++)) 
 do
-	echo "Process Name: $(ps -p ${pidList[$i]} -o comm=), Process ID: ${pidList[$i]}" >> memory_${pidList[$i]}.log
+	echo "Process Name: $(ps -p ${pidList[$i]} -o comm=), Process ID: ${pidList[$i]}" > memory_${pidList[$i]}.log
 done
 
 while true
 do
-	for ((i=$start;i<=$end;i++)) 
+	for ((i=$start;i<$end+1;i++)) 
 	do
 		IsProcessRunning ${pidList[$i]}
 		isProcessRunningreturnvalue=$?
@@ -188,8 +187,8 @@ do
 		if [ $isProcessRunningreturnvalue -eq 0 ] ; then 
 			procID=${pidList[$i]}
 			
-			###old command
-			echo " $('date') $(($(pmap ${pidList[$i]}| grep -i Total | awk '/[0-9]/{print $2}'  | sed 's/[^0-9]*//g') /1024)) MB" >> memory_${pidList[$i]}.log
+		# 	###old command
+			echo " $('date') $(($(pmap ${pidList[$i]}| grep -i Total | awk '/[0-9]/{print $2}'  | sed 's/[^0-9]*//g') /1024)) MB" >> memory_${procID}.log
 			
 			now=$(date) #time
 			printf "#%s \n" "$now" >> ${hostName}_cpu_mem_${procID}.log
@@ -204,6 +203,7 @@ do
 			GetChildren $procID 0 >> ${hostName}_cpu_mem_${procID}.log
 		fi
 		if [ $isProcessRunningreturnvalue -eq 1 ] ; then
+			echo "Will notify of PID: ${pidList[$i]}"
 		#	Send mail raises an error on some machines (to be fixed)
     		Notifyme ${InfoName[${pidList[$i]}]} ${pidList[$i]} ${InfoUsername[${pidList[$i]}]}
     		unset pidList[$i]
