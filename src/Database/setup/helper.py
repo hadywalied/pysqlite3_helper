@@ -69,4 +69,4 @@ class Helper(object):
 
     def __del__(self):
         '''close the connection to the database'''
-        self.db.close()
+        # self.db.close()

@@ -172,7 +172,7 @@ class PerformanceTracker:
         # print('regular usage')
 
     def __del__(self):
-        self.db_helper.db.close()
+        # self.db_helper.db.close()
         self.subject.detach(self.observer_a)
 
 
