@@ -60,32 +60,18 @@ class PerformanceTracker:
         self.tracker_path_ = instance["tracker_path"]
 
         self.processes = {}
-        # self.initialize_consumption(self.tracker_path_)
-        self.subject = ConcreteSubject()
 
+        self.subject = ConcreteSubject()
         self.observer_a = ConcreteObserverA()
         self.subject.attach(self.observer_a)
 
-        command = "bash {tracker_path} {usage_path} {logging_path} {py_ver} {app}".format(
-            tracker_path=self.tracker_path_, usage_path=self.usage_path, logging_path=self.logging_path,
-            py_ver=self.py_ver, app=self.app)
-        self.subject.some_business_logic(command)
+        self.initialize_consumption(self.tracker_path_)
 
     def initialize_consumption(self, tracker_path):
-        try:
-
-            command = "bash {tracker_path} {usage_path} {logging_path} {py_ver} {app}".format(
-                tracker_path=tracker_path, usage_path=self.usage_path, logging_path=self.logging_path,
-                py_ver=self.py_ver, app=self.app)
-
-            for output in run_command(command):
-                if output.__contains__('error') or output.__contains__('not found'):
-                    print('something went wrong: {output}'.format(output=output))
-                    sys.exit()
-                print(output.strip())
-        except subprocess.CalledProcessError as e:
-            print(e.output)
-            sys.exit()
+        command = "bash {tracker_path} {usage_path} {logging_path} {py_ver} {app}".format(
+            tracker_path=tracker_path, usage_path=self.usage_path, logging_path=self.logging_path,
+            py_ver=self.py_ver, app=self.app)
+        self.subject.start_process(command)
 
     def main(self):
         self.analyze_log_files()
@@ -100,10 +86,10 @@ class PerformanceTracker:
         # pdb.set_trace()
         for file in memory_files:
             lines = get_lines_in_file(logging_path + '/' + file)
-            if(len(lines) < 2):
+            if (len(lines) < 2):
                 time.sleep(30)
                 lines = get_lines_in_file(logging_path + '/' + file)
-                if(len(lines)<2):
+                if (len(lines) < 2):
                     print("error in log file {}".format(file))
                     sys.exit(0)
 

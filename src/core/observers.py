@@ -72,7 +72,7 @@ class ConcreteSubject(Subject):
         for observer in self._observers:
             observer.update(self)
 
-    def some_business_logic(self, command) -> None:
+    def start_process(self, command) -> None:
         """
         Usually, the subscription logic is only a fraction of what a Subject can
         really do. Subjects commonly hold some important business logic, that
@@ -82,7 +82,7 @@ class ConcreteSubject(Subject):
 
         def target():
             self.process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE)
+                                            stderr=subprocess.PIPE)
             while True:
                 output = self.process.stdout.readline().decode()
                 if output == '' and self.process.poll() is not None:
@@ -139,9 +139,9 @@ if __name__ == "__main__":
     observer_a = ConcreteObserverA()
     subject.attach(observer_a)
 
-    subject.some_business_logic()
-    subject.some_business_logic()
+    subject.start_process()
+    subject.start_process()
 
     subject.detach(observer_a)
 
-    subject.some_business_logic()
+    subject.start_process()
