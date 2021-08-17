@@ -105,7 +105,9 @@ class PerformanceTracker:
 
     def validate_consumption(self, processes):
         # pdb.set_trace()
+        self.memory_info_dict = {}
         for i, process in enumerate(processes.items()):
+            process_name, process_id = process[0].split('_')[0], process[0].split('_')[1]
             initial_consumption = process[1][0]
             expected_memory_consumption = 0
             expected_memory_consumption = self.calculate_expected_value(expected_memory_consumption,
@@ -113,9 +115,26 @@ class PerformanceTracker:
             actual_memory_consumption = process[1][1]
             tolerance_ratio = self.get_tolerance() + 1
             if actual_memory_consumption > tolerance_ratio * expected_memory_consumption:
-                self.report_excessive_consumption()
+                no_leakage, log_message, memory_leakage, actual_memory_consumption, process_name, process_id = self.report_excessive_consumption(
+                    actual_memory_consumption, expected_memory_consumption, process_name,
+                    process_id)
+                self.memory_info_dict["memory_{}.log".format(process_id).replace('.', '_')] = {'no_leakage': no_leakage,
+                                                                                               'log_message': log_message,
+                                                                                               'memory_leakage': memory_leakage,
+                                                                                               'actual_memory_consumption': actual_memory_consumption,
+                                                                                               'running_process':
+                                                                                                   process[0]}
             else:
-                self.report_regular_consumption()
+                no_leakage, log_message, memory_leakage, actual_memory_consumption, process_name, process_id = self.report_regular_consumption(
+                    actual_memory_consumption, expected_memory_consumption, process_name,
+                    process_id)
+                self.memory_info_dict["memory_{}.log".format(process_id).replace('.', '_')] = {'no_leakage': no_leakage,
+                                                                                               'log_message': log_message,
+                                                                                               'memory_leakage': memory_leakage,
+                                                                                               'actual_memory_consumption': actual_memory_consumption,
+                                                                                               'running_process':
+                                                                                                   process[0]}
+        print("memory_info_dict", self.memory_info_dict)
 
     def calculate_expected_value(self, expected_memory_consumption, initial_consumption, process):
         # pdb.set_trace()
@@ -131,11 +150,26 @@ class PerformanceTracker:
             tolerance.append(max(t))
         return max(tolerance)
 
-    def report_excessive_consumption(self):
-        print('exccessive usage')
+    def report_excessive_consumption(self, actual_memory_consumption, expected_memory_consumption, process_name,
+                                     process_number):
+        memory_leakage = actual_memory_consumption - expected_memory_consumption
+        log_message = "Memory leakage detected in " + process_name + 'in the memory logging file: \"' + 'memory_' + process_number + '\".'
+        log_message += ' Actual Memory Consumption = ' + str(
+            actual_memory_consumption) + 'MB. Expected memory consumption = ' + str(expected_memory_consumption) + 'MB.'
+        log_message += ' Memory leakage value = ' + str(memory_leakage) + 'MB.'
+        no_leakage = False
+        return no_leakage, log_message, memory_leakage, actual_memory_consumption, process_name, process_number
+        # print('exccessive usage')
 
-    def report_regular_consumption(self):
-        print('regular usage')
+    def report_regular_consumption(self, actual_memory_consumption, expected_memory_consumption, process_name,
+                                   process_number):
+        no_leakage = True
+        log_message = "No Memory leakage detected in " + process_name + 'in the memory logging file: \"' + 'memory_' + process_number + '\".'
+        log_message += ' Actual Memory Consumption = ' + str(
+            actual_memory_consumption) + 'MB. Expected memory consumption = ' + str(expected_memory_consumption) + 'MB.'
+        memory_leakage = 0
+        return no_leakage, log_message, memory_leakage, actual_memory_consumption, process_name, process_number
+        # print('regular usage')
 
     def __del__(self):
         self.subject.detach(self.observer_a)
