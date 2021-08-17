@@ -120,8 +120,8 @@ attached to.
 class ConcreteObserverA(Observer):
     def update(self, subject: Subject) -> None:
         self.subject = subject
-        if subject.state.__contains__('error') or subject.state.__contains__('not found') or subject.state.__contains__(
-                "down"):
+        if subject.state.__contains__('error') or subject.state.__contains__('not found') \
+                or subject.state.__contains__("down"):
             print('something went wrong: {output}'.format(output=subject.state))
             sys.exit(0)
         print(subject.state)
