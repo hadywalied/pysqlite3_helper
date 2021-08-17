@@ -2,6 +2,8 @@
 #$2 --> Logging directory
 #$3 --> python version
 #$4 --> 5G or Ethernet # Requirement
+#$5 --> PPID
+
 if [ $# -lt 1 ] ; then 
 	echo "Too few Arguments (1--> path to usage detection script, 2--> Logging directory)"
 	return 1

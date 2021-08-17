@@ -6,15 +6,16 @@ import json
 
 from src.core.performance_tracker import PerformanceTracker
 
-
 # Press the green button in the gutter to run the script.
 import time
 
 from src.core.performance_tracker import PerformanceTracker
 import pdb
 from vepy_api import *
+import os
 
 if __name__ == '__main__':
+    print("the pid of python is " + str(os.getpid()))
     # pdb.set_trace()
     json_text = open('input_configuration.json', 'r')
     y = json.load(json_text)
@@ -28,8 +29,8 @@ if __name__ == '__main__':
     time.sleep(30)
     start(phy=2, burst="Cont", packet=p1)
     time.sleep(30)
-    stop(phy=1, snoop = True)
-    stop(phy=2, snoop = True)
+    stop(phy=1, snoop=True)
+    stop(phy=2, snoop=True)
 
     # time.sleep(30)
     tracker.main()

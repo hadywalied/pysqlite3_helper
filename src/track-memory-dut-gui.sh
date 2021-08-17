@@ -9,6 +9,9 @@ fi
 
 sleepTime=1
 
+echo "PID of this script: $$"
+echo "PPID of this script: $PPID"
+
 #check 5G or Ethernet
 if [ -z "$4" ]
 then

@@ -1,3 +1,5 @@
+import pdb
+
 from src.Database.setup.Ethernet.ethrenet_helper import EthernetHelper
 from src.core.handlers.MPG_handler import MPGHandler
 from src.core.handlers.SA_handler import SAHandler
@@ -19,6 +21,7 @@ class Handler:
         }
 
     def calculate_consumption(self, key):
+        pdb.set_trace()
         if key.__contains__('epgm'):
             # move logic inside the specific_handler
             self.calculate_expected_epgm_consumption()
