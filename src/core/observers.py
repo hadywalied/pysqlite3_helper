@@ -126,7 +126,7 @@ class ConcreteObserverA(Observer):
         print(subject.state)
 
     def __del__(self):
-        if subject.thread.isAlive():
+        if subject.thread.is_alive():
             self.process.terminate()
             subject.thread.join()
 
