@@ -53,7 +53,7 @@ class ConcreteSubject(Subject):
     """
 
     def attach(self, observer) -> None:
-        print("Subject: Attached an observer.")
+        # print("Subject: Attached an observer.")
         self._observers.append(observer)
 
     def detach(self, observer) -> None:
@@ -68,7 +68,7 @@ class ConcreteSubject(Subject):
         Trigger an update in each subscriber.
         """
 
-        print("Subject: Notifying observers...")
+        # print("Subject: Notifying observers...")
         for observer in self._observers:
             observer.update(self)
 
@@ -81,11 +81,11 @@ class ConcreteSubject(Subject):
         """
 
         def target():
-            process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE,
+            self.process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE)
             while True:
-                output = process.stdout.readline().decode()
-                if output == '' and process.poll() is not None:
+                output = self.process.stdout.readline().decode()
+                if output == '' and self.process.poll() is not None:
                     self.state = 'process terminated'
                     self.notify()
                     break
@@ -93,10 +93,9 @@ class ConcreteSubject(Subject):
                     self.state = output
                     self.notify()
 
-        thread = threading.Thread(target=target)
-        thread.setDaemon(True)
-        thread.start()
-
+        self.thread = threading.Thread(target=target)
+        self.thread.setDaemon(True)
+        self.thread.start()
 
 
 class Observer(ABC):
@@ -126,10 +125,15 @@ class ConcreteObserverA(Observer):
             sys.exit(0)
         print(subject.state)
 
+    def __del__(self):
+        if subject.thread.isAlive():
+            self.process.terminate()
+            subject.thread.join()
+
 
 if __name__ == "__main__":
     # The client code.
-
+    # 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
     subject = ConcreteSubject()
 
     observer_a = ConcreteObserverA()
