@@ -74,6 +74,11 @@ done
 echo `eval $ethg_usage_command`
 
 re='^[0-9]+$'
+python_id=$PPID
+parentpid_list=`eval ps -o ppid=$python_id -C controller.bin`
+echo $parentpid_list
+echo "${parentpid_list[*]}"
+
 pids=()
 #Extract PIDs by greping all digits with execluding 0->9
 for procInfo in `eval $ethg_usage_command`
