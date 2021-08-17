@@ -153,7 +153,7 @@ class PerformanceTracker:
     def report_excessive_consumption(self, actual_memory_consumption, expected_memory_consumption, process_name,
                                      process_number):
         memory_leakage = actual_memory_consumption - expected_memory_consumption
-        log_message = "Memory leakage detected in " + process_name + 'in the memory logging file: \"' + 'memory_' + process_number + '\".'
+        log_message = "Memory leakage detected in " + process_name + ' in the memory logging file: \"' + 'memory_' + process_number + '\".'
         log_message += ' Actual Memory Consumption = ' + str(
             actual_memory_consumption) + 'MB. Expected memory consumption = ' + str(expected_memory_consumption) + 'MB.'
         log_message += ' Memory leakage value = ' + str(memory_leakage) + 'MB.'
@@ -164,7 +164,7 @@ class PerformanceTracker:
     def report_regular_consumption(self, actual_memory_consumption, expected_memory_consumption, process_name,
                                    process_number):
         no_leakage = True
-        log_message = "No Memory leakage detected in " + process_name + 'in the memory logging file: \"' + 'memory_' + process_number + '\".'
+        log_message = "No Memory leakage detected in " + process_name + ' in the memory logging file: \"' + 'memory_' + process_number + '\".'
         log_message += ' Actual Memory Consumption = ' + str(
             actual_memory_consumption) + 'MB. Expected memory consumption = ' + str(expected_memory_consumption) + 'MB.'
         memory_leakage = 0
