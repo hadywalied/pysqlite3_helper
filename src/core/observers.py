@@ -139,10 +139,10 @@ if __name__ == "__main__":
 
     observer_a = ConcreteObserverA()
     subject.attach(observer_a)
-
-    subject.start_process()
-    subject.start_process()
+    command = ""
+    subject.start_process(command)
+    subject.start_process(command)
 
     subject.detach(observer_a)
 
-    subject.start_process()
+    subject.start_process(command)
