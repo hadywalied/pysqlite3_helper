@@ -21,7 +21,6 @@ class Handler:
         }
 
     def calculate_consumption(self, key):
-        pdb.set_trace()
         if key.__contains__('epgm'):
             # move logic inside the specific_handler
             self.calculate_expected_epgm_consumption()
