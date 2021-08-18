@@ -10,7 +10,6 @@ class Handler:
 
     def __init__(self, instances_list, db):
         '''initializing the adapters with the db instance to calculate the consumption independently'''
-        self.consumptions = []
         self.instances_list = instances_list
         self.db = db
         self.adapters = {
@@ -22,6 +21,7 @@ class Handler:
 
     def calculate_consumption(self, key):
         '''calculate the consumption based on the tool'''
+        self.consumptions = []
         if key.__contains__('epgm'):
             # move logic inside the specific_handler
             self.calculate_expected_epgm_consumption()
