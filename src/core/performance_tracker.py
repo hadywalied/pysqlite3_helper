@@ -1,17 +1,11 @@
-import asyncio
-import pdb
-import time
-from os import environ
-
-from src.Database.setup.FiveG.FiveG_helper import FiveGHelper
-from src.Database.setup.Ethernet.ethrenet_helper import EthernetHelper
-
-import subprocess
 import sys
+import time
 
+from src.Database.setup.Ethernet.ethrenet_helper import EthernetHelper
+from src.Database.setup.FiveG.FiveG_helper import FiveGHelper
 from src.core.handlers.handlers import Handler
 from src.core.observers import ConcreteSubject, ConcreteObserverA
-from src.core.utils import run_command, get_files_in_directory, get_lines_in_file, scrub
+from src.core.utils import get_files_in_directory, get_lines_in_file, scrub
 
 
 # sys.path.insert(1, environ['STAMP_REG_PATH'] + '/Common/python/')

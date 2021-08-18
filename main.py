@@ -3,16 +3,13 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import json
-
-from src.core.performance_tracker import PerformanceTracker
-
+import os
 # Press the green button in the gutter to run the script.
 import time
 
-from src.core.performance_tracker import PerformanceTracker
-import pdb
 from vepy_api import *
-import os
+
+from src.core.performance_tracker import PerformanceTracker
 
 if __name__ == '__main__':
     print("the pid of python is " + str(os.getpid()))

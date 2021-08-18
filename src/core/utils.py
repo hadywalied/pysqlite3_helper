@@ -1,13 +1,5 @@
-import asyncio
-import concurrent.futures
-import os
-import shlex
 from os import listdir
 from os.path import isfile, join
-from threading import Timer
-import time
-
-import subprocess, threading
 
 
 def scrub(name):
