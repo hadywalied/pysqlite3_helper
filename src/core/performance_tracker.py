@@ -33,6 +33,7 @@ class PerformanceTracker:
     '''
 
     def __init__(self, instance):
+        """initializing the tracker from the input_json file"""
 
         application_name = instance["application"].lower()
         self.logging_path = instance["logging_dir"]
@@ -55,11 +56,10 @@ class PerformanceTracker:
         self.instances_list = instance['instances']  # keep track of the DUT instance
 
         self.db_handler = Handler(instances_list=self.instances_list, db=self.db_helper)
-        # self.expected_data = self.db_handler.calculate_consumption()
 
         self.tracker_path_ = instance["tracker_path"]
 
-        self.processes = {}
+        self.processes = {}  # to track the processes actual and max consumption
 
         self.subject = ConcreteSubject()
         self.observer_a = ConcreteObserverA()
@@ -68,20 +68,25 @@ class PerformanceTracker:
         self.initialize_consumption(self.tracker_path_)
 
     def initialize_consumption(self, tracker_path):
+        """the init of the shell process on the other thread"""
         command = "bash {tracker_path} {usage_path} {logging_path} {py_ver} {app}".format(
             tracker_path=tracker_path, usage_path=self.usage_path, logging_path=self.logging_path,
             py_ver=self.py_ver, app=self.app)
         self.subject.start_process(command)
 
     def main(self):
+        """calculation of the expected consumption and comparing it to the
+                                            actual consumption that's read from the memory files"""
         self.analyze_log_files()
         self.validate_consumption(self.processes)
 
     def analyze_log_files(self):
+        """getting the files list"""
         log_files_list = get_files_in_directory(self.logging_path)
         self.analyze_memory_files(self.logging_path, log_files_list)
 
     def analyze_memory_files(self, logging_path, log_files_list):
+        """"getting the actual consumption from the memory files"""
         memory_files = [file for file in log_files_list if 'memory_' in file]
         # pdb.set_trace()
         for file in memory_files:
@@ -104,7 +109,7 @@ class PerformanceTracker:
                 [memories[0], max(memories)])
 
     def validate_consumption(self, processes):
-        # pdb.set_trace()
+        """calculating the expected consumption and comparing it against the actual consumption in order to report it"""
         self.memory_info_dict = {}
         for i, process in enumerate(processes.items()):
             process_name, process_id = process[0].split('_')[0], process[0].split('_')[1]
@@ -115,6 +120,7 @@ class PerformanceTracker:
             actual_memory_consumption = process[1][1]
             tolerance_ratio = self.get_tolerance() + 1
             if actual_memory_consumption > tolerance_ratio * expected_memory_consumption:
+                """reporting excessive consumption"""
                 no_leakage, log_message, memory_leakage, actual_memory_consumption, process_name, process_id = self.report_excessive_consumption(
                     actual_memory_consumption, expected_memory_consumption, process_name,
                     process_id)
@@ -125,6 +131,7 @@ class PerformanceTracker:
                                                                                                'running_process':
                                                                                                    process[0]}
             else:
+                """reporting regular consumption"""
                 no_leakage, log_message, memory_leakage, actual_memory_consumption, process_name, process_id = self.report_regular_consumption(
                     actual_memory_consumption, expected_memory_consumption, process_name,
                     process_id)
@@ -137,7 +144,7 @@ class PerformanceTracker:
         print("memory_info_dict", self.memory_info_dict)
 
     def calculate_expected_value(self, expected_memory_consumption, initial_consumption, process):
-        # pdb.set_trace()
+        """calculating the expected values from the handler"""
         total_accumulated_consumptions = self.db_handler.calculate_consumption(key=process[0])
         for total_accumulated_consumption in total_accumulated_consumptions:
             expected_memory_consumption = expected_memory_consumption + sum(total_accumulated_consumption)
@@ -145,6 +152,7 @@ class PerformanceTracker:
         return expected_memory_consumption
 
     def get_tolerance(self):
+        """getting the tolerance value from the handler"""
         tolerance = []
         for t in self.db_handler.get_tolerance():
             tolerance.append(max(t))
@@ -152,6 +160,7 @@ class PerformanceTracker:
 
     def report_excessive_consumption(self, actual_memory_consumption, expected_memory_consumption, process_name,
                                      process_number):
+        """excessive consumption report generator"""
         memory_leakage = actual_memory_consumption - expected_memory_consumption
         log_message = "Memory leakage detected in " + process_name + ' in the memory logging file: \"' + 'memory_' + process_number + '\".'
         log_message += ' Actual Memory Consumption = ' + str(
@@ -163,6 +172,7 @@ class PerformanceTracker:
 
     def report_regular_consumption(self, actual_memory_consumption, expected_memory_consumption, process_name,
                                    process_number):
+        """regular consumption report generator"""
         no_leakage = True
         log_message = "No Memory leakage detected in " + process_name + ' in the memory logging file: \"' + 'memory_' + process_number + '\".'
         log_message += ' Actual Memory Consumption = ' + str(
